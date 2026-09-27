@@ -86,6 +86,8 @@ prisma/
 test/
 ```
 
+> **Cập nhật 2026-09-27:** Mỗi feature được tổ chức theo `src/modules/<feature>/{domain,application,infrastructure,presentation}` (Clean/Hexagonal/DDD), xem `directives/architecture.md`. Home slides nằm ở `src/modules/home/` thay vì `site/`. Cây thư mục trên chỉ còn là gợi ý phân chia trách nhiệm; route và contract ở §8 không đổi.
+
 Quy tắc ranh giới:
 
 - Controller chỉ parse request/response và gọi service.

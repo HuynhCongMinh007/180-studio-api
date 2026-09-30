@@ -1,4 +1,4 @@
-import { InvalidHomeSlideError } from './home-slide.errors';
+import { InvalidHomeSlideError } from '../home-slide.errors';
 
 export const HOME_SLIDE_ALT_TEXT_MAX_LENGTH = 500;
 
@@ -11,7 +11,7 @@ export interface HomeSlideProps {
 }
 
 export class HomeSlide {
-  private constructor(private readonly props: HomeSlideProps) {}
+  private constructor(private readonly props: HomeSlideProps) { }
 
   static create(props: HomeSlideProps): HomeSlide {
     if (!isHttpsUrl(props.imageUrl)) {

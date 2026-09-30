@@ -1,5 +1,5 @@
 import type { HomeSlide as HomeSlideRecord } from '../../../generated/prisma/client';
-import { HomeSlide } from '../domain/home-slide.entity';
+import { HomeSlide } from '../domain/entities/home-slide.entity';
 
 export function toHomeSlide(record: HomeSlideRecord): HomeSlide {
   return HomeSlide.create({

@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { ListHomeSlidesUseCase } from '../application/list-home-slides.use-case';
-import { HomeSlide } from '../domain/home-slide.entity';
-import { HomeSlideRepository } from '../domain/home-slide.repository';
+import { HomeSlide } from '../domain/entities/home-slide.entity';
+import { HomeSlideRepository } from '../domain/repositories/home-slide.repository';
 import { PublicHomeSlidesController } from './public-home-slides.controller';
 
 class InMemoryHomeSlideRepository extends HomeSlideRepository {

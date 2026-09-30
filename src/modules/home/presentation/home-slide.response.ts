@@ -1,4 +1,4 @@
-import { HomeSlide } from '../domain/home-slide.entity';
+import { HomeSlide } from '../domain/entities/home-slide.entity';
 
 // Matches the `HomeSlide` / `AssetRef` contract in FE_NEXTJS_REBUILD_SPEC.md; optional fields are omitted, not null.
 export interface AssetRefResponse {

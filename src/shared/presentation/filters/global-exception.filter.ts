@@ -7,15 +7,15 @@ import {
   Logger,
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
-import { DomainError, DomainErrorKind } from '../../domain/domain.error';
+import { DomainError } from '../../domain/domain.error';
+import {
+  ERROR_CODE,
+  ERROR_MESSAGE,
+  STATUS_BY_KIND,
+  VALIDATION_DETAILS_SEPARATOR,
+} from '../constants/error.constants';
 import { ErrorResponseDto } from '../dtos/error-response.dto';
 import { getRequestId } from '../request-context/request-context';
-
-const STATUS_BY_KIND: Record<DomainErrorKind, number> = {
-  invalid: 400,
-  not_found: 404,
-  conflict: 409,
-};
 
 interface ResolvedError {
   status: number;
@@ -60,22 +60,25 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
+      const messageCode = HttpStatus[status] ?? ERROR_CODE.HTTP_FALLBACK;
+
+      if (status >= HttpStatus.INTERNAL_SERVER_ERROR) {
+        return {
+          status,
+          message: ERROR_MESSAGE.INTERNAL,
+          messageCode,
+          details: ERROR_MESSAGE.INTERNAL,
+        };
+      }
       const { message, details } = this.readHttpBody(exception);
-      return {
-        status,
-        message,
-        messageCode: HttpStatus[status] ?? 'HTTP_ERROR',
-        details,
-      };
+      return { status, message, messageCode, details };
     }
-    
-    const reason =
-      exception instanceof Error ? exception.message : 'Unknown error';
+
     return {
       status: HttpStatus.INTERNAL_SERVER_ERROR,
-      message: 'Internal server error',
-      messageCode: 'INTERNAL_ERROR',
-      details: process.env.NODE_ENV === 'production' ? 'Internal server error' : reason,
+      message: ERROR_MESSAGE.INTERNAL,
+      messageCode: ERROR_CODE.INTERNAL,
+      details: ERROR_MESSAGE.INTERNAL,
     };
   }
 
@@ -88,21 +91,29 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     const raw = (body as { message?: string | string[] }).message;
     if (Array.isArray(raw)) {
-      return { message: 'Validation failed', details: raw.join('; ') };
+      return {
+        message: ERROR_MESSAGE.VALIDATION,
+        details: raw.join(VALIDATION_DETAILS_SEPARATOR),
+      };
     }
     const message = raw ?? exception.message;
     return { message, details: message };
   }
 
   private log(exception: unknown, status: number, req: Request): void {
-    const reason =
-      exception instanceof Error ? exception.message : String(exception);
-    const line = `${req.method} ${req.originalUrl} -> ${status} ${reason}`;
+    const line = `${req.method} ${req.originalUrl} -> ${status}`;
+    const reason = exception instanceof Error ? exception.message : String(exception);
 
-    if (status >= 500) {
-      this.logger.error(line, exception instanceof Error ? exception.stack : undefined);
+    if (status < HttpStatus.INTERNAL_SERVER_ERROR) {
+      this.logger.warn(`${line} ${reason}`);
+      return;
+    }
+
+    // A stack already starts with "Name: message", so don't repeat the message in `line`.
+    if (exception instanceof Error && exception.stack) {
+      this.logger.error(line, exception.stack);
     } else {
-      this.logger.warn(line);
+      this.logger.error(`${line} ${reason}`);
     }
   }
 }

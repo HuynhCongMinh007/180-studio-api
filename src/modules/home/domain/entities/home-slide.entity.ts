@@ -1,3 +1,4 @@
+import { isHttpsUrl } from '../../../../lib/utils';
 import { InvalidHomeSlideError } from '../errors/home-slide.errors';
 
 export const HOME_SLIDE_ALT_TEXT_MAX_LENGTH = 500;
@@ -5,13 +6,19 @@ export const HOME_SLIDE_ALT_TEXT_MAX_LENGTH = 500;
 export interface HomeSlideProps {
   id: number;
   imageUrl: string;
-  imagePublicId: string | null;
-  altText: string | null;
   position: number;
 }
 
 export class HomeSlide {
-  private constructor(private readonly props: HomeSlideProps) { }
+  private readonly _id: number
+  private readonly _imageUrl: string
+  private readonly _position: number
+
+  private constructor(props: HomeSlideProps) {
+    this._id = props.id;
+    this._imageUrl = props.imageUrl;
+    this._position = props.position;
+  }
 
   static create(props: HomeSlideProps): HomeSlide {
     if (!isHttpsUrl(props.imageUrl)) {
@@ -22,42 +29,18 @@ export class HomeSlide {
         'position must be a non-negative integer',
       );
     }
-    if (
-      props.altText !== null &&
-      props.altText.length > HOME_SLIDE_ALT_TEXT_MAX_LENGTH
-    ) {
-      throw new InvalidHomeSlideError(
-        `altText must be at most ${HOME_SLIDE_ALT_TEXT_MAX_LENGTH} characters`,
-      );
-    }
     return new HomeSlide({ ...props });
   }
 
   get id(): number {
-    return this.props.id;
+    return this._id;
   }
 
   get imageUrl(): string {
-    return this.props.imageUrl;
-  }
-
-  get imagePublicId(): string | null {
-    return this.props.imagePublicId;
-  }
-
-  get altText(): string | null {
-    return this.props.altText;
+    return this._imageUrl;
   }
 
   get position(): number {
-    return this.props.position;
-  }
-}
-
-function isHttpsUrl(value: string): boolean {
-  try {
-    return new URL(value).protocol === 'https:';
-  } catch {
-    return false;
+    return this._position;
   }
 }

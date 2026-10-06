@@ -1,18 +1,18 @@
-import { AsyncLocalStorage } from 'node:async_hooks';
+import { AsyncLocalStorage } from 'node:async_hooks'
 
 interface RequestContext {
-  requestId: string;
+  requestId: string
 }
 
-const storage = new AsyncLocalStorage<RequestContext>();
+const storage = new AsyncLocalStorage<RequestContext>()
 
 export function runWithRequestContext<T>(
   context: RequestContext,
   callback: () => T,
 ): T {
-  return storage.run(context, callback);
+  return storage.run(context, callback)
 }
 
 export function getRequestId(): string | undefined {
-  return storage.getStore()?.requestId;
+  return storage.getStore()?.requestId
 }

@@ -1,11 +1,11 @@
 export interface AssetRefResponse {
-  url: string;
-  publicId?: string;
-  alt?: string;
+  url: string
+  publicId?: string
+  alt?: string
 }
 
 export interface HomeSlideResponse {
-  id: number;
-  image: AssetRefResponse;
-  position: number;
+  id: number
+  image: AssetRefResponse
+  position: number
 }

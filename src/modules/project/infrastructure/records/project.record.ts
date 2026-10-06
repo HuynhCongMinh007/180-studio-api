@@ -1,5 +1,5 @@
-import { Prisma } from '@/generated/prisma/client';
+import { Prisma } from '@/generated/prisma/client'
 
 export type ProjectWithImagesRecord = Prisma.ProjectGetPayload<{
-  include: { projectImages: true };
-}>;
+  include: { projectImages: true }
+}>

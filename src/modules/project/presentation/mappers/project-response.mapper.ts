@@ -1,8 +1,8 @@
-import { Project } from "@/modules/projects/domain/entities/project.entity";
+import { Project } from "@/modules/project/domain/entities/project.entity";
 import {
     ProjectImageResponse,
     ProjectResponse,
-} from "@/modules/projects/presentation/dtos/project.response.dto";
+} from "@/modules/project/presentation/dtos/project.response.dto";
 
 export function toProjectResponse(project: Project): ProjectResponse {
     const projectImages: ProjectImageResponse[] = [];

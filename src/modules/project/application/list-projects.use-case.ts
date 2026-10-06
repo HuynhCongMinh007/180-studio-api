@@ -9,7 +9,7 @@ export class ListProjectsUseCase {
         this._projectRepository = projectRepository
     }
     async execute(): Promise<Project[]> {
-        const records = await this._projectRepository.findAllProjects();
-        return records
+        const projects = await this._projectRepository.findAllProjects();
+        return projects
     }
 }

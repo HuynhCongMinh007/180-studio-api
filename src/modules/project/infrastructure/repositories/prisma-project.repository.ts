@@ -32,4 +32,25 @@ export class PrismaProjectRepository extends ProjectRepository {
     }
     return projects
   }
+  async addProject(project:Project): Promise<void> {
+    await this._prisma.project.create({
+      data: {
+        id: project.id,
+        name: project.name,
+        year: project.year,
+        location: project.location,
+        siteArea: project.siteArea,
+        floorArea: project.floorArea,
+        client: project.client,
+        photographer: project.photographer,
+        videoUrl: project.videoUrl,
+        projectImages: {
+          create: project.projectImages.map((image) => ({
+            imageUrl: image.imageUrl,
+            coverPriority: image.coverPriority
+          })),
+        }
+        }
+      })
+  }
 }

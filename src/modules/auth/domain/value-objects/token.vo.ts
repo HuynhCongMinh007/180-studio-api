@@ -15,7 +15,7 @@ export class Token {
   get accessToken(): string {
     return this._accessToken
   }
-  get refeshToken(): string {
+  get refreshToken(): string {
     return this._refreshToken
   }
 

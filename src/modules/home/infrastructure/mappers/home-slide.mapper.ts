@@ -8,8 +8,6 @@ export function toHomeSlide(record: HomeSlideRecord): HomeSlide {
     return HomeSlide.create({
       id: Number(record.id),
       imageUrl: record.imageUrl,
-      imagePublicId: record.imagePublicId,
-      altText: record.altText,
       position: record.position,
     });
   } catch (error) {

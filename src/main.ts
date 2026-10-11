@@ -4,7 +4,7 @@ import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { GlobalExceptionFilter } from './shared/presentation/filters/global-exception.filter'
 
-const API_PREFIX = 'api/v1'
+const API_PREFIX = 'api'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)

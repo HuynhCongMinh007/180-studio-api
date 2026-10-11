@@ -4,9 +4,13 @@ import { AuthGuard } from '@/shared/presentation/guards/auth.guard'
 import { CreateProjectUsecase } from '../../application/create-projects.use-case'
 import { CreateProjectRequest } from '../dtos/project.request.dto'
 import { toCreateProjectInput } from '../mappers/create-project-request.mapper'
+import { Roles } from '@/shared/presentation/decorators/role.decorator'
+import { RoleGuard } from '@/shared/presentation/guards/role.guard'
+import { Role } from '@/shared/domain/role.enum'
 
 @Controller('projects')
-@UseGuards(AuthGuard)
+@Roles(Role.Admin)
+@UseGuards(AuthGuard, RoleGuard)
 export class AdminProjectController {
   private readonly _createProject: CreateProjectUsecase
 
@@ -23,4 +27,3 @@ export class AdminProjectController {
     })
   }
 }
-

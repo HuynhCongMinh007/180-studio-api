@@ -33,7 +33,7 @@ export class PrismaProjectRepository extends ProjectRepository {
     return projects
   }
 
-  async createProject(project:Project): Promise<void> {
+  async createProject(project: Project): Promise<void> {
     await this._prisma.project.create({
       data: {
         id: project.id,
@@ -48,10 +48,10 @@ export class PrismaProjectRepository extends ProjectRepository {
         projectImages: {
           create: project.projectImages.map((image) => ({
             imageUrl: image.imageUrl,
-            coverPriority: image.coverPriority
+            coverPriority: image.coverPriority,
           })),
-        }
-        }
-      })
+        },
+      },
+    })
   }
 }

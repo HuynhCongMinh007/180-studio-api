@@ -8,7 +8,7 @@ import { CreateProjectUsecase } from './application/create-projects.use-case'
 import { JwtModule } from '@nestjs/jwt'
 
 @Module({
-  imports:[JwtModule.register({})],
+  imports: [JwtModule.register({})],
   controllers: [PublicProjectController, AdminProjectController],
   providers: [
     ListProjectsUseCase,

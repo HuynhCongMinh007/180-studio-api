@@ -1,7 +1,9 @@
 import { CreateProjectRequest } from '../dtos/project.request.dto'
 import { CreateProjectInput } from '../../application/create-projects.use-case'
 
-export function toCreateProjectInput(dto: CreateProjectRequest): CreateProjectInput {
+export function toCreateProjectInput(
+  dto: CreateProjectRequest,
+): CreateProjectInput {
   return {
     name: dto.name,
     year: dto.year ?? null,
@@ -17,4 +19,3 @@ export function toCreateProjectInput(dto: CreateProjectRequest): CreateProjectIn
     })),
   }
 }
-

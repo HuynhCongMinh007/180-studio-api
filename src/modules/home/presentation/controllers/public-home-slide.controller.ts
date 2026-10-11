@@ -7,7 +7,7 @@ import { toHomeSlideResponse } from '../mappers/home-slide-response.mapper'
 @Controller('home-slides')
 export class PublicHomeSlideController {
   private readonly listHomeSlides: ListHomeSlidesUseCase
-  
+
   constructor(listHomeSlides: ListHomeSlidesUseCase) {
     this.listHomeSlides = listHomeSlides
   }

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../database/prisma.service';
-import { HomeSlide } from '../domain/home-slide.entity';
-import { HomeSlideRepository } from '../domain/home-slide.repository';
-import { toHomeSlide } from './home-slide.mapper';
+import { PrismaService } from '../../../../database/prisma.service';
+import { HomeSlide } from '../../domain/entities/home-slide.entity';
+import { HomeSlideRepository } from '../../domain/repositories/home-slide.repository';
+import { toHomeSlide } from '../home-slide.mapper';
 
 @Injectable()
 export class PrismaHomeSlideRepository extends HomeSlideRepository {

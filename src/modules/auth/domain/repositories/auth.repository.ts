@@ -1,6 +1,4 @@
 import { Account } from '../entities/auth.entity'
-import { Token } from '../value-objects/token.vo'
-
-export abstract class AuthRepository {
-  abstract Login(account: Account): Token
+export abstract class AccountRepository {
+  abstract findByEmail(email: string): Promise<Account | null>
 }

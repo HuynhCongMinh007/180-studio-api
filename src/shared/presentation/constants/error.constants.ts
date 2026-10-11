@@ -1,4 +1,5 @@
 import { HttpStatus } from '@nestjs/common'
+import type { ApplicationErrorKind } from '../../application/application.error'
 import type { DomainErrorKind } from '../../domain/domain.error'
 
 export const ERROR_MESSAGE = {
@@ -11,10 +12,15 @@ export const ERROR_CODE = {
   HTTP_FALLBACK: 'HTTP_ERROR',
 } as const
 
-export const STATUS_BY_KIND: Record<DomainErrorKind, HttpStatus> = {
+export const STATUS_BY_KIND: Record<
+  DomainErrorKind | ApplicationErrorKind,
+  HttpStatus
+> = {
   invalid: HttpStatus.BAD_REQUEST,
   not_found: HttpStatus.NOT_FOUND,
   conflict: HttpStatus.CONFLICT,
+  unauthorized: HttpStatus.UNAUTHORIZED,
+  forbidden: HttpStatus.FORBIDDEN,
 }
 
 export const VALIDATION_DETAILS_SEPARATOR = '; '

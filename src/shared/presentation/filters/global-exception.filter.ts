@@ -7,6 +7,7 @@ import {
   Logger,
 } from '@nestjs/common'
 import type { Request, Response } from 'express'
+import { ApplicationError } from '../../application/application.error'
 import { DomainError } from '../../domain/domain.error'
 import {
   ERROR_CODE,
@@ -50,6 +51,15 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
   private resolve(exception: unknown): ResolvedError {
     if (exception instanceof DomainError) {
+      return {
+        status: STATUS_BY_KIND[exception.kind],
+        message: exception.message,
+        messageCode: exception.code,
+        details: exception.message,
+      }
+    }
+
+    if (exception instanceof ApplicationError) {
       return {
         status: STATUS_BY_KIND[exception.kind],
         message: exception.message,

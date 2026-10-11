@@ -6,7 +6,11 @@ import { toHomeSlideResponse } from '../mappers/home-slide-response.mapper'
 
 @Controller('home-slides')
 export class PublicHomeSlideController {
-  constructor(private readonly listHomeSlides: ListHomeSlidesUseCase) {}
+  private readonly listHomeSlides: ListHomeSlidesUseCase
+  
+  constructor(listHomeSlides: ListHomeSlidesUseCase) {
+    this.listHomeSlides = listHomeSlides
+  }
 
   @Get()
   async list(): Promise<ResponseDto<HomeSlideResponse[]>> {

@@ -1,4 +1,4 @@
-import { InvalidHomeSlideError } from '../home-slide.errors';
+import { InvalidHomeSlideError } from '../errors/home-slide.errors';
 
 export const HOME_SLIDE_ALT_TEXT_MAX_LENGTH = 500;
 

@@ -100,11 +100,17 @@ export class Project {
     if (isPresent(props.location) && isBlank(props.location)) {
       throw new InvalidProjectError('location must not be empty')
     }
-    if (isPresent(props.siteArea) && !(props.siteArea > 0)) {
-      throw new InvalidProjectError('siteArea must be greater than 0')
+    if (
+      isPresent(props.siteArea) &&
+      (!Number.isInteger(props.siteArea) || props.siteArea <= 0)
+    ) {
+      throw new InvalidProjectError('siteArea must be a positive integer')
     }
-    if (isPresent(props.floorArea) && !(props.floorArea > 0)) {
-      throw new InvalidProjectError('floorArea must be greater than 0')
+    if (
+      isPresent(props.floorArea) &&
+      (!Number.isInteger(props.floorArea) || props.floorArea <= 0)
+    ) {
+      throw new InvalidProjectError('floorArea must be a positive integer')
     }
     if (isPresent(props.client) && isBlank(props.client)) {
       throw new InvalidProjectError('client must not be empty')

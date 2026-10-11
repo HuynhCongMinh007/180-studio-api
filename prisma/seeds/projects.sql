@@ -14,12 +14,12 @@ INSERT INTO projects (
   client, photographer, video_url, updated_at
 )
 VALUES
-  ('0199a000-0000-7000-8000-000000000001', 'Garden House',      2024, 'District 2, Ho Chi Minh City', 877.00, 413.50, 'Private client',        'Photographer A', 'https://www.youtube.com/watch?v=placeholder01', now()),
-  ('0199a000-0000-7000-8000-000000000002', 'Brick Courtyard',   2023, 'Thu Duc, Ho Chi Minh City',    320.00, 540.00, 'Family Nguyen',         'Photographer B', 'https://www.youtube.com/watch?v=placeholder02', now()),
-  ('0199a000-0000-7000-8000-000000000003', 'River Cafe',        2022, 'Hoi An, Quang Nam',            150.00, 210.00, 'River Cafe Co., Ltd.',  'Photographer C', 'https://www.youtube.com/watch?v=placeholder03', now()),
-  ('0199a000-0000-7000-8000-000000000004', 'Hill Retreat',      2021, 'Da Lat, Lam Dong',            1200.00, 380.00, 'Private client',        'Photographer A', 'https://www.youtube.com/watch?v=placeholder04', now()),
-  ('0199a000-0000-7000-8000-000000000005', 'Narrow Townhouse',  2020, 'District 3, Ho Chi Minh City',  60.00, 245.00, 'Family Tran',           'Photographer D', 'https://www.youtube.com/watch?v=placeholder05', now()),
-  ('0199a000-0000-7000-8000-000000000006', 'Concrete Studio',   2019, 'Hanoi',                        210.00, 360.00, 'Studio Owner',          'Photographer B', 'https://www.youtube.com/watch?v=placeholder06', now())
+  ('0199a000-0000-7000-8000-000000000001', 'Garden House',      2024, 'District 2, Ho Chi Minh City', 877, 414, 'Private client',        'Photographer A', 'https://www.youtube.com/watch?v=placeholder01', now()),
+  ('0199a000-0000-7000-8000-000000000002', 'Brick Courtyard',   2023, 'Thu Duc, Ho Chi Minh City',    320, 540, 'Family Nguyen',         'Photographer B', 'https://www.youtube.com/watch?v=placeholder02', now()),
+  ('0199a000-0000-7000-8000-000000000003', 'River Cafe',        2022, 'Hoi An, Quang Nam',            150, 210, 'River Cafe Co., Ltd.',  'Photographer C', 'https://www.youtube.com/watch?v=placeholder03', now()),
+  ('0199a000-0000-7000-8000-000000000004', 'Hill Retreat',      2021, 'Da Lat, Lam Dong',            1200, 380, 'Private client',        'Photographer A', 'https://www.youtube.com/watch?v=placeholder04', now()),
+  ('0199a000-0000-7000-8000-000000000005', 'Narrow Townhouse',  2020, 'District 3, Ho Chi Minh City',  60, 245, 'Family Tran',           'Photographer D', 'https://www.youtube.com/watch?v=placeholder05', now()),
+  ('0199a000-0000-7000-8000-000000000006', 'Concrete Studio',   2019, 'Hanoi',                        210, 360, 'Studio Owner',          'Photographer B', 'https://www.youtube.com/watch?v=placeholder06', now())
 ON CONFLICT (id) DO UPDATE SET
   name          = EXCLUDED.name,
   year          = EXCLUDED.year,

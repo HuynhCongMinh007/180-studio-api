@@ -1,4 +1,3 @@
-import { decimalToNumber } from '@/lib/utils/decimal.util'
 import { Project } from '@/modules/project/domain/entities/project.entity'
 import { ProjectImage } from '@/modules/project/domain/value-objects/project-image.vo'
 import { ProjectWithImagesRecord } from '@/modules/project/infrastructure/records/project.record'
@@ -20,8 +19,8 @@ export function toProject(record: ProjectWithImagesRecord): Project {
       name: record.name,
       year: record.year,
       location: record.location,
-      siteArea: decimalToNumber(record.siteArea),
-      floorArea: decimalToNumber(record.floorArea),
+      siteArea: record.siteArea,
+      floorArea: record.floorArea,
       client: record.client,
       photographer: record.photographer,
       videoUrl: record.videoUrl,

@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { ProjectRepository } from "@/modules/projects/domain/repositories/project.repository";
+import { ProjectRepository } from "@/modules/project/domain/repositories/project.repository";
 import { PrismaService } from "@/database/prisma.service";
-import { Project } from "@/modules/projects/domain/entities/project.entity";
-import { ProjectWithImagesRecord } from "@/modules/projects/infrastructure/records/project.record";
-import { toProject } from "@/modules/projects/infrastructure/mappers/project.mapper";
+import { Project } from "@/modules/project/domain/entities/project.entity";
+import { ProjectWithImagesRecord } from "@/modules/project/infrastructure/records/project.record";
+import { toProject } from "@/modules/project/infrastructure/mappers/project.mapper";
 
 @Injectable()
 export class PrismaProjectRepository extends ProjectRepository {

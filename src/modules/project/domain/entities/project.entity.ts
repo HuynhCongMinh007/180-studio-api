@@ -1,6 +1,6 @@
 import { isBlank, isHttpsUrl, isPresent } from '@/lib/utils';
-import { InvalidProjectError } from '@/modules/projects/domain/errors/project.errors';
-import { ProjectImage } from '@/modules/projects/domain/value-objects/project-image.vo';
+import { InvalidProjectError } from '@/modules/project/domain/errors/project.errors';
+import { ProjectImage } from '@/modules/project/domain/value-objects/project-image.vo';
 
 export const PROJECT_MIN_YEAR = 1900;
 

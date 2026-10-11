@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { ListHomeSlidesUseCase } from './application/list-home-slides.use-case';
 import { HomeSlideRepository } from './domain/repositories/home-slide.repository';
 import { PrismaHomeSlideRepository } from './infrastructure/repositories/prisma-home-slide.repository';
-import { PublicHomeSlidesController } from './presentation/controllers/public-home-slides.controller';
+import { PublicHomeSlideController } from './presentation/controllers/public-home-slide.controller';
 
 @Module({
-  controllers: [PublicHomeSlidesController],
+  controllers: [PublicHomeSlideController],
   providers: [
     ListHomeSlidesUseCase,
     // Bind the domain port to its Prisma adapter.

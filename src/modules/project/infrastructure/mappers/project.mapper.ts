@@ -1,7 +1,7 @@
 import { decimalToNumber } from "@/lib/utils/decimal.util";
-import { Project } from "@/modules/projects/domain/entities/project.entity";
-import { ProjectImage } from "@/modules/projects/domain/value-objects/project-image.vo";
-import { ProjectWithImagesRecord } from "@/modules/projects/infrastructure/records/project.record";
+import { Project } from "@/modules/project/domain/entities/project.entity";
+import { ProjectImage } from "@/modules/project/domain/value-objects/project-image.vo";
+import { ProjectWithImagesRecord } from "@/modules/project/infrastructure/records/project.record";
 import { DomainError } from "@/shared/domain/domain.error";
 
 export function toProject(record: ProjectWithImagesRecord): Project {

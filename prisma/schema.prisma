@@ -21,7 +21,7 @@ model HomeSlide {
 
 model Project {
   id            String         @id @default(uuid(7)) @db.Uuid
-  name          String         @map("name")
+  name          String
   year          Int            @db.SmallInt
   location      String?        @db.VarChar(255)
   siteArea      Decimal?       @map("site_area_m2") @db.Decimal(10, 2)

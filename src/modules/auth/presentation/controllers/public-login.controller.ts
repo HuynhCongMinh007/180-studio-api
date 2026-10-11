@@ -2,7 +2,7 @@ import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common'
 import { LoginUseCase } from '../../application/use-cases/login.use-case'
 import { Token } from '../../domain/value-objects/token.vo'
 import { LoginRequest } from '../dtos/login.request.dto'
-import { LoginResponseDto } from '../dtos/login.responsity.dto'
+import { LoginResponseDto } from '../dtos/login.response.dto'
 import { toTokenDto } from '../mappers/login.mapper'
 import { ResponseDto } from '@/shared/presentation/dtos/response.dto'
 

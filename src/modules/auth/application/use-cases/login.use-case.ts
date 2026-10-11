@@ -4,6 +4,7 @@ import { PasswordHasher } from '../../domain/ports/password-hasher'
 import { TokenService } from '../../domain/ports/token-service'
 import { Token } from '../../domain/value-objects/token.vo'
 import { InvalidCredentialsError } from '../errors/auth.errors'
+import { Role } from '@/shared/domain/role.enum'
 
 export interface PayloadLogin {
   email: string
@@ -32,7 +33,10 @@ export class LoginUseCase {
       throw new InvalidCredentialsError()
     }
 
-    const token: Token = await this.tokenService.sign({ sub: account.id })
+    const token: Token = await this.tokenService.sign({
+      sub: account.id,
+      role: Role.Admin,
+    })
     return token
   }
 }

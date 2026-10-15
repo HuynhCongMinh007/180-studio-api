@@ -1,10 +1,6 @@
 import { Role } from '@/shared/domain/role.enum'
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common'
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
+import { InvalidTokenError, MissingTokenError } from '../errors/access.errors'
 import { JwtService } from '@nestjs/jwt'
 import { Request } from 'express'
 
@@ -28,12 +24,12 @@ export class AuthGuard implements CanActivate {
     // 'Bearer token'
     const bearerToken = request.headers.authorization
     if (!bearerToken) {
-      throw new UnauthorizedException()
+      throw new MissingTokenError()
     }
 
     const arrToken = bearerToken.split(' ')
     if (arrToken[0] !== 'Bearer' || !arrToken[1]) {
-      throw new UnauthorizedException()
+      throw new MissingTokenError()
     }
 
     const token = arrToken[1]
@@ -43,8 +39,8 @@ export class AuthGuard implements CanActivate {
         secret: process.env.JWT_ACCESS_SECRET,
       })
       request.user = payload
-    } catch (error) {
-      throw new UnauthorizedException()
+    } catch {
+      throw new InvalidTokenError()
     }
 
     return true

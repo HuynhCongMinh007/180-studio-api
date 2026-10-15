@@ -16,6 +16,7 @@ import {
   VALIDATION_DETAILS_SEPARATOR,
 } from '../constants/error.constants'
 import { ErrorResponseDto } from '../dtos/error-response.dto'
+import { PresentationError } from '../errors/presentation.error'
 import { getRequestId } from '../request-context/request-context'
 
 interface ResolvedError {
@@ -59,7 +60,10 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       }
     }
 
-    if (exception instanceof ApplicationError) {
+    if (
+      exception instanceof ApplicationError ||
+      exception instanceof PresentationError
+    ) {
       return {
         status: STATUS_BY_KIND[exception.kind],
         message: exception.message,

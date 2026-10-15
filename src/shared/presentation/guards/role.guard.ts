@@ -1,15 +1,12 @@
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
 import {
-  CanActivate,
-  ExecutionContext,
-  ForbiddenException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common'
+  InsufficientRoleError,
+  MissingTokenError,
+} from '../errors/access.errors'
 import { AuthenticatedRequest } from './auth.guard'
 import { Role } from '@/shared/domain/role.enum'
 import { Reflector } from '@nestjs/core'
-import { ROLE_KEY, Roles } from '../decorators/role.decorator'
-import { removeAllListeners } from 'process'
+import { ROLE_KEY } from '../decorators/role.decorator'
 
 @Injectable()
 export class RoleGuard implements CanActivate {
@@ -30,9 +27,12 @@ export class RoleGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>()
     const role = request.user?.role
     if (!role) {
-      return false
+      throw new MissingTokenError()
+    }
+    if (!requiredRoles.includes(role)) {
+      throw new InsufficientRoleError()
     }
 
-    return requiredRoles.includes(role)
+    return true
   }
 }

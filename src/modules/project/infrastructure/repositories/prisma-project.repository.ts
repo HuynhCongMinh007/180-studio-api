@@ -20,6 +20,7 @@ export class PrismaProjectRepository extends ProjectRepository {
         include: {
           projectImages: {
             orderBy: { coverPriority: 'asc' },
+            take: 1,
           },
         },
         orderBy: [{ createdAt: 'asc' }],

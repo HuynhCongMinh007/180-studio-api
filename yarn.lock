@@ -830,6 +830,11 @@
     tslib "2.8.1"
     uid "2.0.2"
 
+"@nestjs/cqrs@^12.1.0":
+  version "12.1.0"
+  resolved "https://registry.npmjs.org/@nestjs/cqrs/-/cqrs-12.1.0.tgz"
+  integrity sha512-5V8liWbpPzkkQhauorh0YyOPZYfnzWMwFBnjnc4QRjksG2wliYtbJfLr7w83h0WMGT8DsQ19v/vwlnvaKF6jrg==
+
 "@nestjs/jwt@^12.0.2":
   version "12.0.2"
   resolved "https://registry.npmjs.org/@nestjs/jwt/-/jwt-12.0.2.tgz"
@@ -4539,7 +4544,7 @@ readdirp@^5.0.0:
   resolved "https://registry.npmjs.org/readdirp/-/readdirp-5.1.1.tgz"
   integrity sha512-Kko+Y5XQ6fM+Ce3dq3m9YGxnacYZYl9cA1wZjaF3Vbry2L3i1qVg8+CAgNPsXRArPMUMCaOR7oa9Nqntc43JKA==
 
-"reflect-metadata@^0.1.12 || ^0.2.0", reflect-metadata@^0.2.2:
+"reflect-metadata@^0.1.12 || ^0.2.0", "reflect-metadata@^0.1.13 || ^0.2.0", reflect-metadata@^0.2.2:
   version "0.2.2"
   resolved "https://registry.npmjs.org/reflect-metadata/-/reflect-metadata-0.2.2.tgz"
   integrity sha512-urBwgfrvVP/eAyXx4hluJivBKzuEbSQs9rKWCrCkbSxNv8mxPcUZKeuoF3Uy4mJl3Lwprp6yy5/39VWigZ4K6Q==
@@ -4618,7 +4623,7 @@ run-async@^2.4.0:
   resolved "https://registry.npmjs.org/run-async/-/run-async-2.4.1.tgz"
   integrity sha512-tvVnVv01b8c1RrA6Ep7JkStj85Guv/YrMcwqYQnwjsAS2cTmmPGBBjAjpCW7RrSodNSoE2/qg9O4bceNvUuDgQ==
 
-rxjs@^7.1.0, rxjs@^7.5.5, rxjs@^7.8.1, rxjs@7.8.2:
+rxjs@^7.1.0, rxjs@^7.2.0, rxjs@^7.5.5, rxjs@^7.8.1, rxjs@7.8.2:
   version "7.8.2"
   resolved "https://registry.npmjs.org/rxjs/-/rxjs-7.8.2.tgz"
   integrity sha512-dhKf903U/PQZY6boNNtAGdWbG85WAbjT/1xYoZIC7FAY0yWapOBQVsVrDl58W86//e1VpMNBtRV4MaXfdMySFA==

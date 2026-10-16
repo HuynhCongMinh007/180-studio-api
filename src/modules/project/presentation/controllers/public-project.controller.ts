@@ -11,12 +11,14 @@ export class PublicProjectController {
   private readonly _queryBus: QueryBus
 
   constructor(queryBus: QueryBus) {
-    this._queryBus = queryBus 
+    this._queryBus = queryBus
   }
 
   @Get()
   async list(): Promise<ResponseDto<ProjectResponse[]>> {
-    const projects: Project[] = await this._queryBus.execute(new ListProjectQuery())
+    const projects: Project[] = await this._queryBus.execute(
+      new ListProjectQuery(),
+    )
 
     const projectResponses: ProjectResponse[] = []
     for (const project of projects) {

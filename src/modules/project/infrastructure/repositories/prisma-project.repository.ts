@@ -34,8 +34,8 @@ export class PrismaProjectRepository extends ProjectRepository {
     return projects
   }
 
-  async createProject(project: Project): Promise<void> {
-    await this._prisma.project.create({
+  async createProject(project: Project): Promise<string> {
+    const res = await this._prisma.project.create({
       data: {
         id: project.id,
         name: project.name,
@@ -54,5 +54,6 @@ export class PrismaProjectRepository extends ProjectRepository {
         },
       },
     })
+    return res.id
   }
 }

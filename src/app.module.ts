@@ -3,8 +3,15 @@ import { DatabaseModule } from './database/database.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { HomeModule } from './modules/home/home.module'
 import { ProjectModule } from './modules/project/project.module'
+import { CqrsModule } from '@nestjs/cqrs'
 
 @Module({
-  imports: [DatabaseModule, AuthModule, HomeModule, ProjectModule],
+  imports: [
+    DatabaseModule,
+    AuthModule,
+    HomeModule,
+    ProjectModule,
+    CqrsModule.forRoot(),
+  ],
 })
 export class AppModule {}

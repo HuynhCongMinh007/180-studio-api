@@ -13,7 +13,7 @@ export class ProjectImageRequest {
 
   @IsOptional()
   @IsNumber()
-  coverPriority: number
+  coverPriority?: number
 }
 
 export class CreateProjectRequest {
@@ -22,31 +22,31 @@ export class CreateProjectRequest {
 
   @IsOptional()
   @IsNumber()
-  year: number
+  year?: number
 
   @IsOptional()
   @IsString()
-  location: string
+  location?: string
 
   @IsOptional()
   @IsNumber()
-  siteArea: number
+  siteArea?: number
 
   @IsOptional()
   @IsNumber()
-  floorArea: number
+  floorArea?: number
 
   @IsOptional()
   @IsString()
-  client: string
+  client?: string
 
   @IsOptional()
   @IsString()
-  photographer: string
+  photographer?: string
 
   @IsOptional()
   @IsString()
-  videoUrl: string
+  videoUrl?: string
 
   @IsArray()
   @ValidateNested({ each: true })

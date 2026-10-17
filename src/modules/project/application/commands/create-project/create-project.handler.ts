@@ -15,7 +15,7 @@ export class CreateProjectHandler implements ICommandHandler<CreateProjectComman
   constructor(projectRepository: ProjectRepository) {
     this._projectRepository = projectRepository
   }
-  async execute(command: CreateProjectCommand): Promise<string> {
+  async execute(command: CreateProjectCommand): Promise<{ projectId: string }> {
     const projectImages = command.projectImages.map(
       (image: ProjectImageProps) => ProjectImage.create(image),
     )

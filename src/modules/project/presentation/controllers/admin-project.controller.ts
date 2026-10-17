@@ -19,7 +19,9 @@ export class AdminProjectController {
   }
 
   @Post()
-  async create(@Body() body: CreateProjectRequest): Promise<ResponseDto<string>> {
+  async create(
+    @Body() body: CreateProjectRequest,
+  ): Promise<ResponseDto<{ projectId: string }>> {
     const projectId = await this._commandBus.execute(
       new CreateProjectCommand(
         body.name,
@@ -36,7 +38,7 @@ export class AdminProjectController {
         })),
       ),
     )
-    return new ResponseDto<string>({
+    return new ResponseDto<{ projectId: string }>({
       message: 'Create project successfully',
       data: projectId,
     })

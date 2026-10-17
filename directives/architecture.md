@@ -24,6 +24,7 @@ Dependencies point inward only: `presentation -> application -> domain <- infras
 - `application/` depends on domain only, plus decorators from `@nestjs/cqrs` and `@nestjs/common`. It never imports from `presentation/`.
 - `infrastructure/` implements domain ports. Prisma record types never leave this layer.
 - `presentation/` talks to `CommandBus` and `QueryBus` only, never to handlers, repositories or `PrismaService`.
+- `presentation/` may import domain constants and plain value types for read-only use: validation limits in DTO decorators (`PROJECT_MAX_IMAGES`), `Role`, `Token`. It never calls domain behaviour (`Entity.create()`, ports). This keeps one source for each limit without a re-export layer.
 
 ## Data shapes and mapping chain
 
@@ -40,6 +41,25 @@ Dependencies point inward only: `presentation -> application -> domain <- infras
 - Write: DTO -> command -> entity -> record.
 
 The view/response split is deliberate. The extra mapping keeps `application/` free of presentation types. Query handlers return views, never response DTOs. When a view and its response have the same shape, the mapping is still kept so the HTTP contract can change without touching the application layer.
+
+## Where validation lives
+
+| | Request DTO (presentation) | Domain (entity / value object) |
+|---|---|---|
+| Question | "Can I read this request?" | "Is this a valid business object?" |
+| Checks | Types, required or optional, nesting, cheap size bounds | Business invariants: ranges, formats, uniqueness, counts, cross-field rules |
+| Runs | Only for HTTP requests | Every time the object is built: any caller, and when loading from the database |
+| Reports | All errors at once (`ValidationPipe`), HTTP 400 | First error only, `DomainError` (kind `invalid`, HTTP 400) |
+| Authority | A convenience and part of the API contract | The source of truth |
+
+Rules of thumb:
+
+- Test: "If a script called `Entity.create()` with no HTTP layer, must this rule still hold?" Yes: it belongs in the domain.
+- Every business rule lives in the domain. The DTO may repeat it for an early, complete 400, but a DTO-only business rule is a defect.
+- Rules that need the database (for example "name is unique") belong in the command handler plus a database constraint, not in the DTO or the entity.
+- A rule about one image belongs in the `ProjectImage` value object; a rule about the whole collection (count, uniqueness) belongs in the aggregate (`Project`).
+- Share limits through exported domain constants (`PROJECT_MAX_IMAGES`) so the two layers cannot drift. Keep both layers covered by tests.
+- Limits must also respect the database column types (length, integer range). A value the database rejects surfaces as HTTP 500.
 
 ## Ports and wiring
 

@@ -31,8 +31,10 @@ Practising the EventBus and the query view pattern.
 
 ## Known debt
 
-- Open review findings (`.ai/REVIEW_LOG.md`): minor style items R-20261017-4 to -7 only.
-- Domain rules: a project must have at least one image and at least one image with a non-null `coverPriority`. Enforced twice: request DTO (`@ArrayMinSize(1)`, `@HasCoverImage()`) and `Project.create()`. Existing database rows that break either rule would make `GET /api/projects` fail; the seed data is compliant, other data is unchecked.
+- Pending: apply migration `20261017120000_project_image_surrogate_id` (`npm run prisma:migrate`). Until then a project with the same image URL twice still fails in the database with HTTP 500.
+- Open review findings (`.ai/REVIEW_LOG.md`): minor items R-20261017-4 to -7 and -9. Most useful next: R-9 (tests).
+- Text and number limits mirror the database column types (255, 2048, 1024 characters; Int and SmallInt ranges); `name` has a business limit of 255. All are enforced in the domain and repeated in the DTO.
+- Domain rules for project images: 1 to 20 images; `coverPriority` is null or an integer from 0 to 32767; at least one and at most 10 images with a non-null `coverPriority`; no two images share a `coverPriority`. Enforced twice: request DTO (`@ArrayMinSize(1)`, `@ArrayMaxSize(20)`, `@HasCoverImage()`, `@MaxCoverImages(10)`, `@UniqueCoverPriorities()`, `@IsInt() @Min(0)` on `coverPriority`) and `Project.create()`. Existing database rows that break either rule would make `GET /api/projects` fail; the seed data is compliant, other data is unchecked.
 - No tests. `test:e2e` points to `test/jest-e2e.json`, which does not exist.
 - `auth` is not migrated to CQRS.
 - Mixed constructor DI style and import style (alias vs relative); see `directives/code-style.md`.

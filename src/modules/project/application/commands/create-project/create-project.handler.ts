@@ -1,4 +1,4 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs'
+import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs'
 import { CreateProjectCommand } from './create-project.command'
 import { ProjectRepository } from '@/modules/project/domain/repositories/project.repository'
 import { Project } from '@/modules/project/domain/entities/project.entity'
@@ -7,14 +7,15 @@ import {
   ProjectImage,
   ProjectImageProps,
 } from '@/modules/project/domain/value-objects/project-image.vo'
+import { ProjectCreatedEvent } from '../../events/create-project/project-created.event'
 
 @CommandHandler(CreateProjectCommand)
 export class CreateProjectHandler implements ICommandHandler<CreateProjectCommand> {
-  private readonly _projectRepository: ProjectRepository
+  constructor(
+    private readonly projectRepository: ProjectRepository,
+    private readonly eventBus: EventBus,
+  ) {}
 
-  constructor(projectRepository: ProjectRepository) {
-    this._projectRepository = projectRepository
-  }
   async execute(command: CreateProjectCommand): Promise<{ projectId: string }> {
     const projectImages = command.projectImages.map(
       (image: ProjectImageProps) => ProjectImage.create(image),
@@ -31,7 +32,9 @@ export class CreateProjectHandler implements ICommandHandler<CreateProjectComman
       videoUrl: command.videoUrl,
       projectImages: projectImages,
     })
-    const projectId = await this._projectRepository.createProject(project)
+
+    const projectId = await this.projectRepository.createProject(project)
+    this.eventBus.publish(new ProjectCreatedEvent(project.id, project.name))
     return projectId
   }
 }

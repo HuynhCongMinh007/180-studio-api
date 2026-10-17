@@ -6,6 +6,7 @@ import { AdminProjectController } from '@/modules/project/presentation/controlle
 import { JwtModule } from '@nestjs/jwt'
 import { ListProjectHandler } from './application/queries/list-projects/list-projects.handler'
 import { CreateProjectHandler } from './application/commands/create-project/create-project.handler'
+import { ProjectCreatedHandler } from './application/events/create-project/project-created.handler'
 
 @Module({
   imports: [JwtModule.register({})],
@@ -13,6 +14,7 @@ import { CreateProjectHandler } from './application/commands/create-project/crea
   providers: [
     ListProjectHandler,
     CreateProjectHandler,
+    ProjectCreatedHandler,
     // Bind the domain contract to its Prisma implementation.
     { provide: ProjectRepository, useClass: PrismaProjectRepository },
   ],

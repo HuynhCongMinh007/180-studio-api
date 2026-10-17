@@ -16,7 +16,7 @@ export class JwtTokenService extends TokenService {
   async sign(payload: { sub: string; role: Role }): Promise<Token> {
     const accessToken = await this._jwt.signAsync(payload, {
       secret: process.env.JWT_ACCESS_SECRET,
-      expiresIn: '15m',
+      expiresIn: '3d',
     })
 
     const refreshToken = await this._jwt.signAsync(payload, {

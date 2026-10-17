@@ -1,18 +1,38 @@
 # Backend Status
 
-Current phase: NestJS scaffolded (CommonJS + Jest); Prisma 7.10.0 with PostgreSQL driver adapter; first feature module (`home`) built with the layered architecture in `directives/architecture.md`.
+Updated: 2026-10-17
 
-Done:
-- `src/database/` — global `DatabaseModule` + `PrismaService` (`@prisma/adapter-pg`).
-- `prisma/schema.prisma` — `HomeSlide` model (`home_slides`, spec §5.5). Client is generated into `src/generated/prisma` (git-ignored, regenerated on `postinstall`).
-- `src/modules/home/` — `GET /api/v1/site/home-slides` (spec §8.1) across domain/application/infrastructure/presentation, with unit tests.
-- Global prefix `api/v1` set in `main.ts`.
+Phase: learning NestJS, DDD and CQRS on the portfolio API. There is no inherited spec; requirements come from `docs/tasks/`.
 
-Next task: start Postgres, run the first migration (`npm run prisma:migrate -- --name init`), and verify the home-slides endpoint against a real database.
+## Built
 
-Known debt:
-- No migration generated yet (no database available when the model was added). `CHECK (position >= 0)` from spec §5.5 must be added by hand to the migration SQL; Prisma schema cannot express it.
-- Admin home-slide endpoints (spec §8.4: create, reorder, delete) are not built; they need the auth + admin role guard first.
-- Responses are not yet wrapped in the `{ data, meta: { requestId } }` envelope (spec §7); needs the global response interceptor and exception filter.
-- `PrismaService` reads `process.env.DATABASE_URL` directly and the Nest runtime does not load `.env` yet (only `prisma7.config.ts` does); fix with the config module (`src/config/`, spec §13).
-- `ObserveModule` in `app.module.ts` still uses placeholder credentials from the scaffold.
+| Module | Endpoint | Style |
+|---|---|---|
+| auth | `POST /api/login` | use-case class (`LoginUseCase`), JWT, bcrypt |
+| home | `GET /api/home-slides` | CQRS query returning `HomeSlideView[]` |
+| project | `GET /api/projects` | CQRS query returning `ProjectView[]` |
+| project | `POST /api/projects` (admin) | CQRS command returning `{ projectId }`, publishes `ProjectCreatedEvent` (logged) |
+
+Platform:
+
+- Prisma 7.10 with `@prisma/adapter-pg`; migrations in `prisma/migrations/` (home slides, project, user, session index, area to int).
+- `main.ts`: global prefix `api`, `ValidationPipe` (`whitelist`, `forbidNonWhitelisted`, no `transform`), `GlobalExceptionFilter`.
+- Success envelope `ResponseDto`: `{ success, message, requestId, timestamp, data, metadata? }`.
+- `CqrsModule.forRoot()` in `AppModule`.
+
+## Current focus
+
+Practising the EventBus and the query view pattern.
+
+## Next
+
+- T-001 (in review): `ListProjectQuery` now returns `ProjectView[]`; close it after the minor findings are fixed.
+- Verify `POST /api/projects` against the database and check the `ProjectCreatedHandler` log line.
+
+## Known debt
+
+- Open review findings (`.ai/REVIEW_LOG.md`): minor style items R-20261017-4 to -7 only.
+- Domain rules: a project must have at least one image and at least one image with a non-null `coverPriority`. Enforced twice: request DTO (`@ArrayMinSize(1)`, `@HasCoverImage()`) and `Project.create()`. Existing database rows that break either rule would make `GET /api/projects` fail; the seed data is compliant, other data is unchecked.
+- No tests. `test:e2e` points to `test/jest-e2e.json`, which does not exist.
+- `auth` is not migrated to CQRS.
+- Mixed constructor DI style and import style (alias vs relative); see `directives/code-style.md`.

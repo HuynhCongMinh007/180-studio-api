@@ -1,10 +1,10 @@
-import { HomeSlide } from '../../domain/entities/home-slide.entity'
+import { HomeSlideView } from '../../application/queries/list-home-slides/home-slide.view'
 import {
   AssetRefResponse,
   HomeSlideResponse,
 } from '../dtos/home-slide.response.dto'
 
-export function toHomeSlideResponse(slide: HomeSlide): HomeSlideResponse {
-  const image: AssetRefResponse = { url: slide.imageUrl }
-  return { id: slide.id, image, position: slide.position }
+export function toHomeSlideResponse(view: HomeSlideView): HomeSlideResponse {
+  const image: AssetRefResponse = { url: view.imageUrl }
+  return { id: view.id, image, position: view.position }
 }

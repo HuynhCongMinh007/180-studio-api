@@ -86,6 +86,14 @@ export class Project {
     if (isBlank(props.name)) {
       throw new InvalidProjectError('name must not be empty')
     }
+    if (props.projectImages.length === 0) {
+      throw new InvalidProjectError('project must have at least one image')
+    }
+    if (props.projectImages.every((image) => image.coverPriority === null)) {
+      throw new InvalidProjectError(
+        'project must have at least one cover image (coverPriority is not null)',
+      )
+    }
     const currentYear = new Date().getFullYear()
     if (
       isPresent(props.year) &&

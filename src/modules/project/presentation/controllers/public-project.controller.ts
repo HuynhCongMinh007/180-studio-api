@@ -5,6 +5,7 @@ import { toProjectResponse } from '@/modules/project/presentation/mappers/projec
 import { ResponseDto } from '@/shared/presentation/dtos/response.dto'
 import { QueryBus } from '@nestjs/cqrs'
 import { ListProjectQuery } from '../../application/queries/list-projects/list-projects.query'
+import { ProjectView } from '../../application/queries/list-projects/list-project.view'
 
 @Controller('projects')
 export class PublicProjectController {
@@ -16,7 +17,7 @@ export class PublicProjectController {
 
   @Get()
   async list(): Promise<ResponseDto<ProjectResponse[]>> {
-    const projects: Project[] = await this._queryBus.execute(
+    const projects: ProjectView[] = await this._queryBus.execute(
       new ListProjectQuery(),
     )
 

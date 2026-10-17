@@ -1,13 +1,11 @@
-import { Project } from '@/modules/project/domain/entities/project.entity'
 import { ProjectResponse } from '@/modules/project/presentation/dtos/project.response.dto'
+import { ProjectView } from '../../application/queries/list-projects/list-project.view'
 
-export function toProjectResponse(project: Project): ProjectResponse {
-  const firstImage = project.projectImages[0]
-
+export function toProjectResponse(project: ProjectView): ProjectResponse {
   const projectResponse: ProjectResponse = {
     id: project.id,
     name: project.name,
-    imageUrl: firstImage ? firstImage.imageUrl : null,
+    imageUrl: project.imageUrl,
   }
   return projectResponse
 }

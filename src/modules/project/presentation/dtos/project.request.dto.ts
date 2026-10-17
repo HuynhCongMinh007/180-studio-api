@@ -1,4 +1,5 @@
 import {
+  ArrayMinSize,
   IsArray,
   IsNumber,
   IsOptional,
@@ -6,6 +7,7 @@ import {
   ValidateNested,
 } from 'class-validator'
 import { Type } from 'class-transformer'
+import { HasCoverImage } from '../validators/has-cover-image.validator'
 
 export class ProjectImageRequest {
   @IsString()
@@ -49,6 +51,8 @@ export class CreateProjectRequest {
   videoUrl?: string
 
   @IsArray()
+  @ArrayMinSize(1)
+  @HasCoverImage()
   @ValidateNested({ each: true })
   @Type(() => ProjectImageRequest)
   projectImages: ProjectImageRequest[]

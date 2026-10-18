@@ -4,6 +4,8 @@ import { PrismaService } from '@/database/prisma.service'
 import { Project } from '@/modules/project/domain/entities/project.entity'
 import { ProjectWithImagesRecord } from '@/modules/project/infrastructure/records/project.record'
 import { toProject } from '@/modules/project/infrastructure/mappers/project.mapper'
+import { getTx } from '@/shared/domain/transaction/transaction-context'
+import type { Prisma } from '@/generated/prisma/client'
 
 @Injectable()
 export class PrismaProjectRepository extends ProjectRepository {
@@ -14,17 +16,21 @@ export class PrismaProjectRepository extends ProjectRepository {
     this._prisma = prisma
   }
 
+  // The client of the current transaction if there is one, otherwise the plain client.
+  private get db(): Prisma.TransactionClient {
+    return getTx<Prisma.TransactionClient>() ?? this._prisma
+  }
+
   async findAllProjects(): Promise<Project[]> {
-    const records: ProjectWithImagesRecord[] =
-      await this._prisma.project.findMany({
-        include: {
-          projectImages: {
-            orderBy: { coverPriority: 'asc' },
-            take: 1,
-          },
+    const records: ProjectWithImagesRecord[] = await this.db.project.findMany({
+      include: {
+        projectImages: {
+          orderBy: { coverPriority: 'asc' },
+          take: 1,
         },
-        orderBy: [{ createdAt: 'asc' }],
-      })
+      },
+      orderBy: [{ createdAt: 'asc' }],
+    })
 
     const projects: Project[] = []
     for (const record of records) {
@@ -35,7 +41,7 @@ export class PrismaProjectRepository extends ProjectRepository {
   }
 
   async createProject(project: Project): Promise<{ projectId: string }> {
-    const res = await this._prisma.project.create({
+    const res = await this.db.project.create({
       data: {
         id: project.id,
         name: project.name,

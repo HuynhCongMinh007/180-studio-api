@@ -1,6 +1,6 @@
 import { Command } from '@nestjs/cqrs'
 
-export class CreateProjectCommand extends Command<{projectId:string}> {
+export class CreateProjectCommand extends Command<{ projectId: string }> {
   constructor(
     public readonly name: string,
     public readonly year: number | null | undefined,

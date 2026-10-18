@@ -2,6 +2,22 @@
 
 Newest first. Written automatically on every review request (`directives/agent-workflow.md` §5). Statuses: `Open`, `Fixed`, `Won't fix`.
 
+## 2026-10-18 — transaction topic: review and close
+
+Scope: `shared/domain/transaction/*`, `database/prisma-transaction-manager.ts`, `database/database.module.ts`, `prisma-project.repository.ts`, `create-project.handler.ts`.
+
+Verified: `npm run build` passes; `oxlint` clean; `prettier --check "src/**/*.ts"` clean after fixes. A throwaway script on the compiled `dist` with a fake Prisma that logs `BEGIN`, `COMMIT`, `ROLLBACK` and the client used showed: without the manager the write goes via the plain client; with `PrismaTransactionManager.run` it goes `BEGIN > write via TX client > COMMIT`; when the callback throws it goes `... > ROLLBACK`.
+Not verified: no real database transaction was observed; the pending migration `20261017120000_project_image_surrogate_id` is not applied.
+
+| ID | Severity | Where | Finding | Status |
+|---|---|---|---|---|
+| R-20261018-1 | Blocking | `prisma-project.repository.ts` | The repository used `this._prisma`, so `TransactionManager.run` wrapped nothing: writes stayed outside the transaction. Added the `db` getter (`getTx() ?? this._prisma`) and used it in both methods | Fixed 2026-10-18 |
+| R-20261018-2 | Minor | `transaction-context.ts`, `prisma-transaction-manager.ts` | Function named `runIntransaction`; renamed to `runInTransaction` | Fixed 2026-10-18 |
+| R-20261018-3 | Minor | `create-project.handler.ts` | `async () => await ...` inside `run` was redundant; now `() => this.projectRepository.createProject(project)` | Fixed 2026-10-18 |
+| R-20261018-4 | Minor | three files | Prettier violations (`create-project.command.ts`, `list-projects.query.ts`, `logging-command.publisher.ts`) plus the repository after the edit; formatted. This closes R-20261017-5 | Fixed 2026-10-18 |
+
+Earlier during the topic (already fixed by the owner): `run` received a result instead of a function and `createProject` was called twice; `PrismaTransactionManager` lacked `@Injectable()` and `this.prisma` was `undefined` at runtime.
+
 ## 2026-10-17 (demo) — `commandPublisher` example and a bug found while running it
 
 Added `src/shared/application/cqrs/logging-command.publisher.ts` (`LoggingCommandPublisher`, logs `Dispatch <CommandName>`) and wired it in `app.module.ts`: `CqrsModule.forRoot({ commandPublisher: new LoggingCommandPublisher() })`. Unlike the event publisher, replacing the command publisher is safe: `CommandBus.execute()` looks the handler up in a map and only calls `publisher.publish()` as a side hook (`command-bus.js:62-70`).

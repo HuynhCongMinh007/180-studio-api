@@ -8,12 +8,14 @@ import {
   ProjectImageProps,
 } from '@/modules/project/domain/value-objects/project-image.vo'
 import { ProjectCreatedEvent } from '../../events/create-project/project-created.event'
+import { TransactionManager } from '@/shared/domain/transaction/transaction-manager'
 
 @CommandHandler(CreateProjectCommand)
 export class CreateProjectHandler implements ICommandHandler<CreateProjectCommand> {
   constructor(
     private readonly projectRepository: ProjectRepository,
     private readonly eventBus: EventBus,
+    private readonly transactionManager: TransactionManager,
   ) {}
 
   async execute(command: CreateProjectCommand): Promise<{ projectId: string }> {
@@ -33,8 +35,10 @@ export class CreateProjectHandler implements ICommandHandler<CreateProjectComman
       projectImages: projectImages,
     })
 
-    const projectId = await this.projectRepository.createProject(project)
+    const result = await this.transactionManager.run(() =>
+      this.projectRepository.createProject(project),
+    )
     this.eventBus.publish(new ProjectCreatedEvent(project.name, project.id))
-    return projectId
+    return result
   }
 }

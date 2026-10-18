@@ -67,9 +67,29 @@ Rules of thumb:
 - Every command, query and event handler is listed in the feature module's `providers`.
 - `CqrsModule.forRoot()` is imported once, in `AppModule`; it is global.
 
+## Transactions
+
+A command handler that must write several times atomically wraps the writes in `TransactionManager.run`.
+
+| Piece | Where | Role |
+|---|---|---|
+| `TransactionManager` (abstract class) | `src/shared/domain/transaction/transaction-manager.ts` | Port: `run(callback)`; the handler depends only on this |
+| `runInTransaction`, `getTx` | `src/shared/domain/transaction/transaction-context.ts` | `AsyncLocalStorage` that carries the current `tx`; Node only, no Prisma or Nest |
+| `PrismaTransactionManager` | `src/database/prisma-transaction-manager.ts` | Opens `prisma.$transaction`, puts `tx` in the context, runs the callback; Prisma commits or rolls back |
+| Repository getter `db` | `infrastructure/repositories/prisma-*.repository.ts` | `getTx<Prisma.TransactionClient>() ?? this._prisma` |
+
+Rules:
+
+- Pass a function to `run`, never its result: `run(() => repository.save(x))`, with no `await` inside the parentheses. The work must start after `BEGIN`.
+- Every repository method that takes part in a transaction reads its client through the `db` getter. A method that uses `this._prisma` directly writes outside the transaction without any error.
+- Publish events after `run` returns, so they only go out once the data is committed. The default `EventBus` does not wait for handlers and swallows their errors; an event published inside the callback can run after the transaction has closed.
+- Wrap in one place only (the handler). Do not also wrap at a bus: Prisma would open two separate transactions.
+- A single nested write (for example a project with its images) is already atomic in Prisma; `run` matters from the second repository call on.
+- Provider classes need `@Injectable()`; without a decorator Nest passes no constructor arguments and the dependency is `undefined` at runtime.
+
 ## Shared code
 
-- `src/database/`: global `DatabaseModule` and `PrismaService`.
+- `src/database/`: global `DatabaseModule`, `PrismaService`, `PrismaTransactionManager`.
 - `src/shared/domain|application|presentation/`: base errors (`DomainError`, `ApplicationError`, `PresentationError`), `Role`, guards, `@Roles`, `GlobalExceptionFilter`, `ResponseDto`, request context.
 - `src/lib/utils/`: small pure helpers (`isBlank`, `isHttpsUrl`, `isPresent`).
 

@@ -18,7 +18,7 @@ Platform:
 - Prisma 7.10 with `@prisma/adapter-pg`; migrations in `prisma/migrations/` (home slides, project, user, session index, area to int).
 - `main.ts`: global prefix `api`, `ValidationPipe` (`whitelist`, `forbidNonWhitelisted`, no `transform`), `GlobalExceptionFilter`.
 - Success envelope `ResponseDto`: `{ success, message, requestId, timestamp, data, metadata? }`.
-- `CqrsModule.forRoot()` in `AppModule`.
+- `CqrsModule.forRoot({ commandPublisher: new LoggingCommandPublisher() })` in `AppModule`: logs each command name (teaching example).
 
 ## Current focus
 

@@ -34,7 +34,7 @@ export class CreateProjectHandler implements ICommandHandler<CreateProjectComman
     })
 
     const projectId = await this.projectRepository.createProject(project)
-    this.eventBus.publish(new ProjectCreatedEvent(project.id, project.name))
+    this.eventBus.publish(new ProjectCreatedEvent(project.name, project.id))
     return projectId
   }
 }

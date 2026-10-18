@@ -5,7 +5,8 @@ Verified against the installed `node_modules/@nestjs/cqrs/dist` (12.1.0). Docs: 
 ## Setup
 
 - `CqrsModule.forRoot()` once in `AppModule`. It returns a module with `global: true`, so feature modules do not import `CqrsModule`.
-- No `forRoot` options are used. All publishers are the in-memory defaults.
+- One option is used: `commandPublisher: new LoggingCommandPublisher()` (`src/shared/application/cqrs/logging-command.publisher.ts`), a teaching example that logs each command name. The other five options keep their in-memory defaults.
+- Replacing `commandPublisher` or `queryPublisher` is safe: the buses call `publish()` only as a side hook. Replacing `eventPublisher` is not: event handlers subscribe to the default publisher's subject, so a custom one must still feed it (not verified by running).
 
 ## Queries
 

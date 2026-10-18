@@ -2,6 +2,19 @@
 
 Newest first. Written automatically on every review request (`directives/agent-workflow.md` §5). Statuses: `Open`, `Fixed`, `Won't fix`.
 
+## 2026-10-17 (demo) — `commandPublisher` example and a bug found while running it
+
+Added `src/shared/application/cqrs/logging-command.publisher.ts` (`LoggingCommandPublisher`, logs `Dispatch <CommandName>`) and wired it in `app.module.ts`: `CqrsModule.forRoot({ commandPublisher: new LoggingCommandPublisher() })`. Unlike the event publisher, replacing the command publisher is safe: `CommandBus.execute()` looks the handler up in a map and only calls `publisher.publish()` as a side hook (`command-bus.js:62-70`).
+
+Verified: `npm run build` passes; `oxlint` shows only R-7; `prettier --check` clean on the two files. A throwaway Nest testing module (real `CreateProjectHandler` and `ProjectCreatedHandler`, an in-memory repository) printed `Dispatch CreateProjectCommand`, then the event log line, then the `execute()` result. No database needed.
+Not verified: live `POST /api/projects`.
+
+Found while running the demo (not changed, per review rules):
+
+| ID | Severity | Where | Finding | Status |
+|---|---|---|---|---|
+| R-20261017-12 | Blocking (by definition: wrong behaviour; only the log line is affected today) | `project-created.event.ts` and `create-project.handler.ts:37` | `ProjectCreatedEvent` is declared `(name, projectId)` but published as `(project.id, project.name)`. Both are strings, so TypeScript cannot catch it. The log prints `Project created: Demo house(<uuid>)`: `projectId` holds the name and `name` holds the id | Fixed 2026-10-17 (call is now `new ProjectCreatedEvent(project.name, project.id)`, matching the constructor) |
+
 ## 2026-10-17 (fixes) — name limit and R-11 (schema)
 
 Changes:

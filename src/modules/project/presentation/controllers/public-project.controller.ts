@@ -1,5 +1,4 @@
 import { Controller, Get } from '@nestjs/common'
-import { Project } from '@/modules/project/domain/entities/project.entity'
 import { ProjectResponse } from '@/modules/project/presentation/dtos/project.response.dto'
 import { toProjectResponse } from '@/modules/project/presentation/mappers/project-response.mapper'
 import { ResponseDto } from '@/shared/presentation/dtos/response.dto'
@@ -21,10 +20,9 @@ export class PublicProjectController {
       new ListProjectQuery(),
     )
 
-    const projectResponses: ProjectResponse[] = []
-    for (const project of projects) {
-      projectResponses.push(toProjectResponse(project))
-    }
+    const projectResponses: ProjectResponse[] = projects.map((pro) =>
+      toProjectResponse(pro),
+    )
 
     return new ResponseDto<ProjectResponse[]>({
       message: 'Get projects successfully',

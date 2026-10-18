@@ -4,6 +4,7 @@ import { AuthModule } from './modules/auth/auth.module'
 import { HomeModule } from './modules/home/home.module'
 import { ProjectModule } from './modules/project/project.module'
 import { CqrsModule } from '@nestjs/cqrs'
+import { LoggingCommandPublisher } from './shared/application/cqrs/logging-command.publisher'
 
 @Module({
   imports: [
@@ -11,7 +12,7 @@ import { CqrsModule } from '@nestjs/cqrs'
     AuthModule,
     HomeModule,
     ProjectModule,
-    CqrsModule.forRoot(),
+    CqrsModule.forRoot({ commandPublisher: new LoggingCommandPublisher() }),
   ],
 })
 export class AppModule {}

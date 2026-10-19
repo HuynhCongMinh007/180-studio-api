@@ -16,7 +16,6 @@ export class PrismaProjectRepository extends ProjectRepository {
     this._prisma = prisma
   }
 
-  // The client of the current transaction if there is one, otherwise the plain client.
   private get db(): Prisma.TransactionClient {
     return getTx<Prisma.TransactionClient>() ?? this._prisma
   }
@@ -60,6 +59,16 @@ export class PrismaProjectRepository extends ProjectRepository {
         },
       },
     })
+    return { projectId: res.id }
+  }
+
+  async deleteProject(projectId: string): Promise<{ projectId: string }> {
+    const res = await this.db.project.delete({
+      where: {
+        id: projectId,
+      },
+    })
+
     return { projectId: res.id }
   }
 }

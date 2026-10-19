@@ -1,5 +1,5 @@
 import { ProjectResponse } from '@/modules/project/presentation/dtos/project.response.dto'
-import { ProjectView } from '../../application/queries/list-projects/list-project.view'
+import { ProjectView } from '../../application/queries/list-projects/project.view'
 
 export function toProjectResponse(project: ProjectView): ProjectResponse {
   const projectResponse: ProjectResponse = {

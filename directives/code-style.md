@@ -17,7 +17,7 @@ Formatting is Prettier (`.prettierrc`: no semicolons, single quotes; 2-space ind
 | Adapter | `prisma-project.repository.ts` | `PrismaProjectRepository` |
 | Mapper | `project-response.mapper.ts` | `toProjectResponse()` (plain function) |
 
-Class names match the file name. Known exceptions to fix when touched: `ListProjectQuery`/`ListProjectHandler` (file is `list-projects.*`), and the `events/create-project/` folder holding `ProjectCreatedEvent`.
+Class names match the file name. Event folders are named after the event (`events/project-created/`).
 
 ## Classes
 

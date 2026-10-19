@@ -4,15 +4,15 @@ import { PrismaProjectRepository } from '@/modules/project/infrastructure/reposi
 import { PublicProjectController } from '@/modules/project/presentation/controllers/public-project.controller'
 import { AdminProjectController } from '@/modules/project/presentation/controllers/admin-project.controller'
 import { JwtModule } from '@nestjs/jwt'
-import { ListProjectHandler } from './application/queries/list-projects/list-projects.handler'
+import { ListProjectsHandler } from './application/queries/list-projects/list-projects.handler'
 import { CreateProjectHandler } from './application/commands/create-project/create-project.handler'
-import { ProjectCreatedHandler } from './application/events/create-project/project-created.handler'
+import { ProjectCreatedHandler } from './application/events/project-created/project-created.handler'
 
 @Module({
   imports: [JwtModule.register({})],
   controllers: [PublicProjectController, AdminProjectController],
   providers: [
-    ListProjectHandler,
+    ListProjectsHandler,
     CreateProjectHandler,
     ProjectCreatedHandler,
     // Bind the domain contract to its Prisma implementation.

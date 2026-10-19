@@ -1,4 +1,4 @@
 import { Query } from '@nestjs/cqrs'
-import { ProjectView } from './list-project.view'
+import { ProjectView } from './project.view'
 
-export class ListProjectQuery extends Query<ProjectView[]> {}
+export class ListProjectsQuery extends Query<ProjectView[]> {}

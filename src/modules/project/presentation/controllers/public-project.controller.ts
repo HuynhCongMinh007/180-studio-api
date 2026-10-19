@@ -3,8 +3,8 @@ import { ProjectResponse } from '@/modules/project/presentation/dtos/project.res
 import { toProjectResponse } from '@/modules/project/presentation/mappers/project-response.mapper'
 import { ResponseDto } from '@/shared/presentation/dtos/response.dto'
 import { QueryBus } from '@nestjs/cqrs'
-import { ListProjectQuery } from '../../application/queries/list-projects/list-projects.query'
-import { ProjectView } from '../../application/queries/list-projects/list-project.view'
+import { ListProjectsQuery } from '../../application/queries/list-projects/list-projects.query'
+import { ProjectView } from '../../application/queries/list-projects/project.view'
 
 @Controller('projects')
 export class PublicProjectController {
@@ -17,7 +17,7 @@ export class PublicProjectController {
   @Get()
   async list(): Promise<ResponseDto<ProjectResponse[]>> {
     const projects: ProjectView[] = await this._queryBus.execute(
-      new ListProjectQuery(),
+      new ListProjectsQuery(),
     )
 
     const projectResponses: ProjectResponse[] = projects.map((pro) =>

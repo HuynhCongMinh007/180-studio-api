@@ -1,13 +1,13 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs'
-import { ListProjectQuery } from './list-projects.query'
+import { ListProjectsQuery } from './list-projects.query'
 import { Project } from '@/modules/project/domain/entities/project.entity'
 import { ProjectRepository } from '@/modules/project/domain/repositories/project.repository'
-import { ProjectView } from './list-project.view'
-import { toProjectView } from './list-project-view.mapper'
+import { ProjectView } from './project.view'
+import { toProjectView } from './project-view.mapper'
 
-@QueryHandler(ListProjectQuery)
-export class ListProjectHandler implements IQueryHandler<
-  ListProjectQuery,
+@QueryHandler(ListProjectsQuery)
+export class ListProjectsHandler implements IQueryHandler<
+  ListProjectsQuery,
   Project[]
 > {
   private readonly _projectRepository: ProjectRepository

@@ -1,5 +1,5 @@
 import { Project } from '@/modules/project/domain/entities/project.entity'
-import { ProjectView } from './list-project.view'
+import { ProjectView } from './project.view'
 
 export function toProjectView(project: Project): ProjectView {
   const res: ProjectView = {

@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common'
 import { PrismaService } from './prisma.service'
-import { TransactionManager } from '@/shared/domain/transaction/transaction-manager'
+import { TransactionManager } from '@/shared/domain/transactions/transaction-manager'
 import { PrismaTransactionManager } from './prisma-transaction-manager'
 
 @Global()

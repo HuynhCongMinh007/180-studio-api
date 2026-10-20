@@ -1,6 +1,6 @@
 # Backend Status
 
-Updated: 2026-10-17
+Updated: 2026-10-19
 
 Phase: learning NestJS, DDD and CQRS on the portfolio API. There is no inherited spec; requirements come from `docs/tasks/`.
 
@@ -10,7 +10,7 @@ Phase: learning NestJS, DDD and CQRS on the portfolio API. There is no inherited
 |---|---|---|
 | auth | `POST /api/login` | use-case class (`LoginUseCase`), JWT, bcrypt |
 | home | `GET /api/home-slides` | CQRS query returning `HomeSlideView[]` |
-| project | `GET /api/projects` | CQRS query returning `ProjectView[]` |
+| project | `GET /api/projects` | CQRS query returning `ProjectView[]`, read through `ProjectQueryRepository` (read model `ProjectSummary`, no entity) |
 | project | `POST /api/projects` (admin) | CQRS command returning `{ projectId }`, publishes `ProjectCreatedEvent` (logged) |
 
 Platform:

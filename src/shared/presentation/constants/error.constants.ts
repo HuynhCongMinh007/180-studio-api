@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common'
 import type { ApplicationErrorKind } from '../../application/application.error'
-import type { DomainErrorKind } from '../../domain/domain.error'
+import type { DomainErrorKind } from '../../domain/errors/domain.error'
 import type { PresentationErrorKind } from '../errors/presentation.error'
 
 export const ERROR_MESSAGE = {

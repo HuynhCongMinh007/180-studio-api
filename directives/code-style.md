@@ -14,7 +14,10 @@ Formatting is Prettier (`.prettierrc`: no semicolons, single quotes; 2-space ind
 | Event | `project-created.event.ts` | `ProjectCreatedEvent` |
 | Event handler | `project-created.handler.ts` | `ProjectCreatedHandler` |
 | Port | `project.repository.ts` | `ProjectRepository` (abstract class) |
+| Query port | `project-query.repository.ts` | `ProjectQueryRepository` (abstract class, returns read models) |
+| Read model | `project-summary.ts` | `ProjectSummary` (plain interface in `domain/read-models/`) |
 | Adapter | `prisma-project.repository.ts` | `PrismaProjectRepository` |
+| Query adapter | `prisma-project-query.repository.ts` | `PrismaProjectQueryRepository` |
 | Mapper | `project-response.mapper.ts` | `toProjectResponse()` (plain function) |
 
 Class names match the file name. Event folders are named after the event (`events/project-created/`).

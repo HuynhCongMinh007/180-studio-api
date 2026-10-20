@@ -1,5 +1,5 @@
 import type { HomeSlide as HomeSlideRecord } from '../../../../generated/prisma/client'
-import { DomainError } from '../../../../shared/domain/domain.error'
+import { DomainError } from '../../../../shared/domain/errors/domain.error'
 import { HomeSlide } from '../../domain/entities/home-slide.entity'
 
 export function toHomeSlide(record: HomeSlideRecord): HomeSlide {

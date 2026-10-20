@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common'
 import type { Request, Response } from 'express'
 import { ApplicationError } from '../../application/application.error'
-import { DomainError } from '../../domain/domain.error'
+import { DomainError } from '../../domain/errors/domain.error'
 import {
   ERROR_CODE,
   ERROR_MESSAGE,

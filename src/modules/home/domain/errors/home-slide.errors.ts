@@ -1,4 +1,4 @@
-import { DomainError } from '../../../../shared/domain/domain.error'
+import { DomainError } from '../../../../shared/domain/errors/domain.error'
 
 export class InvalidHomeSlideError extends DomainError {
   readonly code = 'HOME_SLIDE_INVALID'

@@ -37,7 +37,8 @@ Dependencies point inward only: `presentation -> application -> domain <- infras
 | View (read model, interface) | application | `toXView(entity)` next to the query |
 | Response DTO | presentation | `toXResponse(view)` in `presentation/mappers/` |
 
-- Read: record -> entity -> view -> response.
+- Read: record -> entity -> view -> response (`home`).
+- Read through a query repository (`project` list): record -> read model -> view -> response. The port `XQueryRepository` lives in `domain/repositories/` and returns a plain read-model interface from `domain/read-models/` (no Prisma import; Prisma's `select` result is structurally assignable). No entity is built, so only the needed columns are loaded.
 - Write: DTO -> command -> entity -> record.
 
 The view/response split is deliberate. The extra mapping keeps `application/` free of presentation types. Query handlers return views, never response DTOs. When a view and its response have the same shape, the mapping is still kept so the HTTP contract can change without touching the application layer.

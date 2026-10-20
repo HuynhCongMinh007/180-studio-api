@@ -1,4 +1,4 @@
-import { DomainError } from '../../../../shared/domain/domain.error'
+import { DomainError } from '../../../../shared/domain/errors/domain.error'
 
 export class InvalidProjectError extends DomainError {
   readonly code = 'PROJECT_INVALID'

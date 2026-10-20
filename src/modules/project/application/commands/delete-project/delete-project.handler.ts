@@ -1,6 +1,6 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs'
 import { DeleteProjectCommand } from './delete-project.command'
-import { TransactionManager } from '@/shared/domain/transaction/transaction-manager'
+import { TransactionManager } from '@/shared/domain/transactions/transaction-manager'
 import { ProjectRepository } from '@/modules/project/domain/repositories/project.repository'
 import { ProjectDeletedEvent } from '../../events/project-deleted/project-deleted.event'
 
@@ -12,12 +12,16 @@ export class DeleteProjectHandler implements ICommandHandler<DeleteProjectComman
     private readonly eventBus: EventBus,
   ) {}
 
-  async execute(command: DeleteProjectCommand): Promise<any> {
-    const result = await this.transactionManager.run(() =>
-      this.projectRepository.deleteProject(command.projectId),
-    )
+  async execute(
+    command: DeleteProjectCommand,
+  ): Promise<{ projectId: string; name: string }> {
+    const result = await this.transactionManager.run(async () => {
+      return await this.projectRepository.deleteProject(command.projectId)
+    })
 
-    this.eventBus.publish(new ProjectDeletedEvent(result.projectId))
+    this.eventBus.publish(
+      new ProjectDeletedEvent(result.projectId, result.name),
+    )
 
     return result
   }

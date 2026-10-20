@@ -8,7 +8,7 @@ import {
   ProjectImageProps,
 } from '@/modules/project/domain/value-objects/project-image.vo'
 import { ProjectCreatedEvent } from '../../events/project-created/project-created.event'
-import { TransactionManager } from '@/shared/domain/transaction/transaction-manager'
+import { TransactionManager } from '@/shared/domain/transactions/transaction-manager'
 
 @CommandHandler(CreateProjectCommand)
 export class CreateProjectHandler implements ICommandHandler<CreateProjectCommand> {
@@ -36,7 +36,7 @@ export class CreateProjectHandler implements ICommandHandler<CreateProjectComman
     })
 
     const result = await this.transactionManager.run(() =>
-      this.projectRepository.createProject(project)
+      this.projectRepository.createProject(project),
     )
     this.eventBus.publish(new ProjectCreatedEvent(project.name, project.id))
     return result

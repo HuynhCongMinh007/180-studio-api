@@ -92,6 +92,7 @@ Rules:
 
 - `src/database/`: global `DatabaseModule`, `PrismaService`, `PrismaTransactionManager`.
 - `src/shared/domain|application|presentation/`: base errors (`DomainError`, `ApplicationError`, `PresentationError`), `Role`, guards, `@Roles`, `GlobalExceptionFilter`, `ResponseDto`, request context.
+- Pagination: `PaginationMeta` in `src/shared/domain/pagination.ts` (`directives/pagination.md`).
 - `src/lib/utils/`: small pure helpers (`isBlank`, `isHttpsUrl`, `isPresent`).
 
 ## Testing

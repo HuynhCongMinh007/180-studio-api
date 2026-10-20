@@ -3,3 +3,8 @@ export interface ProjectView {
   name: string
   imageUrl: string | null
 }
+
+export interface ListProjectsView {
+  items: ProjectView[]
+  total: number
+}

@@ -4,7 +4,7 @@ import { PrismaService } from '@/database/prisma.service'
 import { Project } from '@/modules/project/domain/entities/project.entity'
 import { getTx } from '@/shared/domain/transactions/transaction-context'
 import { Prisma } from '@/generated/prisma/client'
-import { ProjectNotFoundError } from '../../domain/errors/project-not-found.errors'
+import { ProjectNotFoundError } from '@/modules/project/domain/errors/project.errors'
 
 @Injectable()
 export class PrismaProjectRepository extends ProjectRepository {
@@ -53,8 +53,7 @@ export class PrismaProjectRepository extends ProjectRepository {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2025'
       ) {
-        const message = `Project (${projectId}) is not found`
-        throw new ProjectNotFoundError(message)
+        throw new ProjectNotFoundError(projectId)
       }
       throw error
     }

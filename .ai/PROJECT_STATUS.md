@@ -1,6 +1,6 @@
 # Backend Status
 
-Updated: 2026-10-19
+Updated: 2026-10-20
 
 Phase: learning NestJS, DDD and CQRS on the portfolio API. There is no inherited spec; requirements come from `docs/tasks/`.
 
@@ -10,7 +10,9 @@ Phase: learning NestJS, DDD and CQRS on the portfolio API. There is no inherited
 |---|---|---|
 | auth | `POST /api/login` | use-case class (`LoginUseCase`), JWT, bcrypt |
 | home | `GET /api/home-slides` | CQRS query returning `HomeSlideView[]` |
-| project | `GET /api/projects` | CQRS query returning `ProjectView[]`, read through `ProjectQueryRepository` (read model `ProjectSummary`, no entity) |
+| project | `GET /api/projects?page&limit` | CQRS query returning `{ items, pagination }` through `ProjectQueryRepository`, which counts and builds `PaginationMeta`; sent as response `metadata` (`directives/pagination.md`) |
+| project | `GET /api/projects/:id` | `GetProjectQuery` returning `ProjectDetailView`; 404 `PROJECT_NOT_FOUND` |
+| project | `DELETE /api/projects/:id` (admin) | `DeleteProjectCommand`, publishes `ProjectDeletedEvent`; 404 `PROJECT_NOT_FOUND` via Prisma `P2025` |
 | project | `POST /api/projects` (admin) | CQRS command returning `{ projectId }`, publishes `ProjectCreatedEvent` (logged) |
 
 Platform:
@@ -32,7 +34,7 @@ Practising the EventBus and the query view pattern.
 ## Known debt
 
 - Pending: apply migration `20261017120000_project_image_surrogate_id` (`npm run prisma:migrate`). Until then a project with the same image URL twice still fails in the database with HTTP 500.
-- Open review findings (`.ai/REVIEW_LOG.md`): minor items R-20261017-4, -6, -9. Most useful next: R-9 (tests).
+- Open review findings (`.ai/REVIEW_LOG.md`): minor R-20261017-9 (tests). `GET /api/projects/:id` returns the application view directly, without a response DTO and mapper (view/response split in `directives/architecture.md`). Most useful next: R-9 (tests).
 - Transactions: `TransactionManager` port + `PrismaTransactionManager` + `getTx` context exist and are used by `CreateProjectHandler` (one nested write today, so atomicity comes from Prisma itself). Only `PrismaProjectRepository` uses `getTx`; every new repository that joins a transaction must do the same (`directives/architecture.md`, section Transactions).
 - Text and number limits mirror the database column types (255, 2048, 1024 characters; Int and SmallInt ranges); `name` has a business limit of 255. All are enforced in the domain and repeated in the DTO.
 - Domain rules for project images: 1 to 20 images; `coverPriority` is null or an integer from 0 to 32767; at least one and at most 10 images with a non-null `coverPriority`; no two images share a `coverPriority`. Enforced twice: request DTO (`@ArrayMinSize(1)`, `@ArrayMaxSize(20)`, `@HasCoverImage()`, `@MaxCoverImages(10)`, `@UniqueCoverPriorities()`, `@IsInt() @Min(0)` on `coverPriority`) and `Project.create()`. Existing database rows that break either rule would make `GET /api/projects` fail; the seed data is compliant, other data is unchecked.

@@ -2,6 +2,51 @@
 
 Newest first. Written automatically on every review request (`directives/agent-workflow.md` §5). Statuses: `Open`, `Fixed`, `Won't fix`.
 
+## 2026-10-20 — list controller builds pagination metadata (port returns `{ items, total }`)
+
+Scope: `public-project.controller.ts` (`list`), `list-projects.handler.ts`, `project-query.repository.ts`, `response.dto.ts`.
+
+Verified: `npx tsc --noEmit` clean; `npm run lint` (2 warnings, R-13). Metadata math checked by hand for page 1, last page and total 0.
+Not verified: app not started for this version, no tests.
+
+| ID | Severity | Where | Finding | Status |
+|---|---|---|---|---|
+| R-20261020-11 | Blocking | `public-project.controller.ts` `prevPage` | `query.page > 0 && query.page <= totalPages ? page - 1 : null` returns `0` on page 1 (should be `null`); use `page > 1 ? page - 1 : null` | Open |
+| R-20261020-12 | Rule | `public-project.controller.ts` `list` | Returns the application view `ProjectView` as the response (`ResponseDto<ProjectView[]>`) and no longer calls `toProjectResponse`; `directives/architecture.md` keeps the view/response mapping so the HTTP contract can change without touching application | Open |
+| R-20261020-13 | Minor | `public-project.controller.ts:12-13` | Unused imports `Matches`, `ProjectResponse` (oxlint) | Open |
+
+## 2026-10-20 — project module file layout (compared with reflective-andon-api)
+
+Scope: file and folder names under `src/modules/project/`, compared with `~/kit/reflective/reflective-andon-api/src/modules/{reviews,notifications}`.
+
+Verified: file tree read; `npx tsc --noEmit` and `npm run lint` clean before this review.
+Not verified: app not started, no live request, no tests. No code changed.
+
+| ID | Severity | Where | Finding | Status |
+|---|---|---|---|---|
+| R-20261020-6 | Rule | `application/queries/project/project.error.ts`, `domain/errors/project-not-found.errors.ts` | Two different `ProjectNotFoundError` classes (application, code `PROEJCT_NOT_FOUND` with a typo; domain, code `NOT_FOUND`). The same situation returns different `messageCode` by endpoint. Keep the domain one with `PROJECT_NOT_FOUND` | Fixed 2026-10-20 |
+| R-20261020-7 | Minor | `application/queries/project/*` | Folder and files do not follow `<name>/<name>.query.ts` (`directives/code-style.md`; andon `get-andon-review/get-andon-review.*`): rename to `get-project/get-project.{query,handler,view}.ts` and `project-detail-view.mapper.ts`; `project.vew.ts` is a typo | Fixed 2026-10-20 |
+| R-20261020-8 | Minor | `domain/types/project-summary.ts` | File holds both `ProjectSummary` and `ProjectDetail`; the folder is `types/` while `directives/architecture.md`, `code-style.md` and lessons say `domain/read-models/` | Fixed 2026-10-20 |
+| R-20261020-9 | Minor | `domain/types/paginated-result.ts` | Generic `PaginatedResult<T>` lives in the project module; it belongs in `src/shared/domain/` (andon: `src/@types/shared/pagination.ts`) | Fixed 2026-10-20 |
+| R-20261020-10 | Minor | `presentation/dtos/project.query.dto.ts` | "query" clashes with the CQRS query name; name per endpoint, e.g. `list-projects.request.dto.ts` (andon: `get-andon-reviews.schema.ts`) | Fixed 2026-10-20 |
+
+## 2026-10-20 — project list pagination (page/limit)
+
+Scope: `presentation/dtos/project.query.dto.ts`, `public-project.controller.ts` (`list`), `list-projects.query.ts`, `list-projects.handler.ts`, `project-query.repository.ts`, `prisma-project-query.repository.ts`, `shared/presentation/dtos/response.dto.ts`.
+
+Verified: `npx tsc --noEmit` clean; `npm run lint` clean; `npx prettier --check "src/modules/project/**/*.ts"` (1 file needs formatting, R-5). Read `@nestjs/common/pipes/validation.pipe.js:102-106`: with more than one validator option, `ValidationPipe` returns `classToPlain(entity)` of the transformed entity, so `@Type(() => Number)` and the `= 1` / `= 10` defaults do apply without `transform: true`.
+Not verified: app not started, no live request, no tests.
+
+Carried forward: R-20261017-4 and R-20261017-6 are fixed (handler generic cleaned, files renamed); other earlier Open rows unchanged.
+
+| ID | Severity | Where | Finding | Status |
+|---|---|---|---|---|
+| R-20261020-1 | Blocking | `list-projects.query.ts`, `prisma-project-query.repository.ts:findAll`, controller `list` | No `total`: the query returns `ProjectView[]` and the repository never counts, so the controller cannot fill `ResponseDto.metadata` (`PaginationMetadata` already exists in `response.dto.ts`). Clients cannot know the number of pages | Fixed 2026-10-20 |
+| R-20261020-2 | Blocking | `project.query.dto.ts:6` | `limit` has `@Max(100)` but no `@Min(1)`: `limit=0` returns an empty page and a negative value reaches Prisma `take` (reads backwards) | Fixed 2026-10-20 |
+| R-20261020-3 | Minor | `prisma-project-query.repository.ts:findAll` | `orderBy: createdAt` alone is not deterministic for offset pagination when two rows tie; add `{ id: 'asc' }` as a tie-breaker | Fixed 2026-10-20 |
+| R-20261020-4 | Minor | `list-projects.query.ts`, `list-projects.handler.ts` | Defaults live in three places (DTO `= 1`, query optional params, handler `?? 1`). Make the query params required numbers and keep the defaults in the DTO only | Fixed 2026-10-20 |
+| R-20261020-5 | Minor | `project-query.repository.ts` | Prettier violation (`findAll(page:number, limit:number)`) | Fixed 2026-10-20 |
+
 ## 2026-10-18 — transaction topic: review and close
 
 Scope: `shared/domain/transaction/*`, `database/prisma-transaction-manager.ts`, `database/database.module.ts`, `prisma-project.repository.ts`, `create-project.handler.ts`.
@@ -124,6 +169,6 @@ Not verified: app not started, no live request, no tests.
 | R-20261017-1 | Blocking | `public-project.controller.ts:19` | Build error TS2322: result annotated `Project[]` but the query now returns `ProjectView[]` | Fixed 2026-10-17 |
 | R-20261017-2 | Blocking | `list-project-view.mapper.ts:8` | `project.projectImages[0].imageUrl` throws `TypeError` for a project with no images (empty list is valid); the old response mapper returned `null` | Open |
 | R-20261017-3 | Rule | `project-response.mapper.ts:4` | `toProjectResponse` still takes the `Project` entity; per `directives/architecture.md` it must map `ProjectView` to `ProjectResponse` | Fixed 2026-10-17 |
-| R-20261017-4 | Minor | `list-projects.handler.ts:8-11` | Stale generic `IQueryHandler<ListProjectQuery, Project[]>`; result type comes from `Query<ProjectView[]>`, so use `IQueryHandler<ListProjectQuery>` | Open |
+| R-20261017-4 | Minor | `list-projects.handler.ts:8-11` | Stale generic `IQueryHandler<ListProjectQuery, Project[]>`; result type comes from `Query<ProjectView[]>`, so use `IQueryHandler<ListProjectQuery>` | Fixed 2026-10-20 |
 | R-20261017-5 | Minor | `list-projects.query.ts:2`, `create-project.command.ts:3` | Prettier violations (stray `;`, `Command<{projectId:string}>`); run `npm run format` | Open |
-| R-20261017-6 | Minor | `list-project.view.ts`, `list-project-view.mapper.ts` | File and symbol names differ from the query folder (`list-projects`) and from the `home` pattern; see `directives/code-style.md` | Open |
+| R-20261017-6 | Minor | `list-project.view.ts`, `list-project-view.mapper.ts` | File and symbol names differ from the query folder (`list-projects`) and from the `home` pattern; see `directives/code-style.md` | Fixed 2026-10-20 |

@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '@/database/prisma.service'
 import { ProjectQueryRepository } from '@/modules/project/domain/repositories/project-query.repository'
-import {
-  ProjectDetail,
-  ProjectSummary,
-} from '@/modules/project/domain/types/project-summary'
+import { ProjectSummary } from '@/modules/project/domain/read-models/project-summary'
+import { ProjectDetail } from '@/modules/project/domain/read-models/project-detail'
 
 @Injectable()
 export class PrismaProjectQueryRepository extends ProjectQueryRepository {
@@ -15,19 +13,32 @@ export class PrismaProjectQueryRepository extends ProjectQueryRepository {
     this._prisma = prisma
   }
 
-  async findAll(): Promise<ProjectSummary[]> {
-    return await this._prisma.project.findMany({
-      select: {
-        id: true,
-        name: true,
-        projectImages: {
-          select: { imageUrl: true, coverPriority: true },
-          orderBy: { coverPriority: 'asc' },
-          take: 1,
+  async findAll(
+    page: number,
+    limit: number,
+  ): Promise<{ items: ProjectSummary[]; total: number }> {
+    const getAll = async () =>
+      await this._prisma.project.findMany({
+        select: {
+          id: true,
+          name: true,
+          projectImages: {
+            select: { imageUrl: true, coverPriority: true },
+            orderBy: { coverPriority: 'asc' },
+            take: 1,
+          },
         },
-      },
-      orderBy: [{ createdAt: 'asc' }],
-    })
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+      })
+    const counts = async () => await this._prisma.project.count()
+    const [items, total] = await Promise.all([getAll(), counts()])
+
+    return {
+      items,
+      total,
+    }
   }
 
   async findOne(id: string): Promise<ProjectDetail | null> {

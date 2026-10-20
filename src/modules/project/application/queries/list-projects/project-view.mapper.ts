@@ -1,4 +1,4 @@
-import { ProjectSummary } from '@/modules/project/domain/types/project-summary'
+import { ProjectSummary } from '@/modules/project/domain/read-models/project-summary'
 import { ProjectView } from './project.view'
 
 export function toProjectView(project: ProjectSummary): ProjectView {

@@ -15,6 +15,7 @@ Open only the row that matches the question.
 | Database schema and migrations | `prisma/schema.prisma`, `prisma/migrations/` |
 | Prisma CLI or Client API | vendor skills in `.claude/skills/prisma-*` |
 | Error to HTTP status | `src/shared/presentation/filters/global-exception.filter.ts`, `src/shared/presentation/constants/error.constants.ts` |
+| Pagination (page/limit, metadata) | `directives/pagination.md` |
 | Success response envelope | `src/shared/presentation/dtos/response.dto.ts` |
 | Auth guards and roles | `src/shared/presentation/guards/`, `src/shared/presentation/decorators/role.decorator.ts` |
 | Bootstrap (prefix, pipes, filters, modules) | `src/main.ts`, `src/app.module.ts` |
@@ -22,10 +23,11 @@ Open only the row that matches the question.
 ## Reference implementations
 
 - Query with view: `src/modules/home/application/queries/list-home-slides/`
-- Command and event: `src/modules/project/application/commands/create-project/`, `src/modules/project/application/events/create-project/`
+- Command and event: `src/modules/project/application/commands/create-project/`, `src/modules/project/application/events/project-created/`
 - Port and adapter wiring: `src/modules/project/project.module.ts`
 - Entity with invariants: `src/modules/project/domain/entities/project.entity.ts`
-- Record to entity mapper: `src/modules/project/infrastructure/mappers/project.mapper.ts`
+- Paginated list through a query repository: `src/modules/project/application/queries/list-projects/`
+- Detail read with not-found: `src/modules/project/application/queries/get-project/`
 
 ## Commands
 

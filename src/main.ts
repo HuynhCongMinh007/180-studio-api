@@ -7,7 +7,9 @@ import { GlobalExceptionFilter } from './shared/presentation/filters/global-exce
 const API_PREFIX = 'api'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create(AppModule, {
+    routeConflictPolicy: { duplicate: 'error', shadow: 'error' },
+  })
   app.setGlobalPrefix(API_PREFIX)
   app.useGlobalFilters(new GlobalExceptionFilter())
   app.useGlobalPipes(

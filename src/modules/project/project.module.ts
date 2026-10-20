@@ -11,7 +11,7 @@ import { CreateProjectHandler } from './application/commands/create-project/crea
 import { ProjectCreatedHandler } from './application/events/project-created/project-created.handler'
 import { DeleteProjectHandler } from './application/commands/delete-project/delete-project.handler'
 import { ProjectDeletedHandler } from './application/events/project-deleted/project-deleted.handler'
-import { DetailProjectHandler } from './application/queries/project/project.handler'
+import { GetProjectHandler } from './application/queries/get-project/get-project.handler'
 
 @Module({
   imports: [JwtModule.register({})],
@@ -22,7 +22,7 @@ import { DetailProjectHandler } from './application/queries/project/project.hand
     ProjectCreatedHandler,
     DeleteProjectHandler,
     ProjectDeletedHandler,
-    DetailProjectHandler,
+    GetProjectHandler,
     // Bind the domain contract to its Prisma implementation.
     { provide: ProjectRepository, useClass: PrismaProjectRepository },
     {

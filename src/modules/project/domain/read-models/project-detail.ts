@@ -1,12 +1,3 @@
-export interface ProjectSummary {
-  id: string
-  name: string
-  projectImages: {
-    imageUrl: string
-    coverPriority: number | null
-  }[]
-}
-
 export interface ProjectDetail {
   id: string
   name: string

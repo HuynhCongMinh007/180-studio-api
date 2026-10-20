@@ -1,9 +1,10 @@
-import {
-  ProjectDetail,
-  ProjectSummary,
-} from '@/modules/project/domain/types/project-summary'
+import { ProjectSummary } from '@/modules/project/domain/read-models/project-summary'
+import { ProjectDetail } from '@/modules/project/domain/read-models/project-detail'
 
 export abstract class ProjectQueryRepository {
-  abstract findAll(): Promise<ProjectSummary[]>
+  abstract findAll(
+    page: number,
+    limit: number,
+  ): Promise<{ items: ProjectSummary[]; total: number }>
   abstract findOne(id: string): Promise<ProjectDetail | null>
 }

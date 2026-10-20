@@ -1,6 +1,6 @@
 import { getRequestId } from '../request-context/request-context'
 
-export interface PaginationMetadata {
+export interface PaginationMeta {
   page: number
   limit: number
   total: number
@@ -15,13 +15,9 @@ export class ResponseDto<T = unknown> {
   readonly requestId: string
   readonly timestamp: string
   readonly data: T
-  readonly metadata?: PaginationMetadata
+  readonly metadata?: PaginationMeta
 
-  constructor(params: {
-    message: string
-    data: T
-    metadata?: PaginationMetadata
-  }) {
+  constructor(params: { message: string; data: T; metadata?: PaginationMeta }) {
     this.message = params.message
     this.data = params.data
     if (params.metadata !== undefined) {

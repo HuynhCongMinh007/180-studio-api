@@ -1,12 +1,14 @@
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common'
-import { ProjectResponse } from '@/modules/project/presentation/dtos/project.response.dto'
-import { toProjectResponse } from '@/modules/project/presentation/mappers/project-response.mapper'
-import { ResponseDto } from '@/shared/presentation/dtos/response.dto'
+import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common'
 import { QueryBus } from '@nestjs/cqrs'
+import { ListProjectsRequest } from '@/modules/project/presentation/dtos/list-projects.request.dto'
+import {
+  PaginationMeta,
+  ResponseDto,
+} from '@/shared/presentation/dtos/response.dto'
 import { ListProjectsQuery } from '../../application/queries/list-projects/list-projects.query'
+import { GetProjectQuery } from '../../application/queries/get-project/get-project.query'
+import { ProjectDetailView } from '../../application/queries/get-project/project-detail.view'
 import { ProjectView } from '../../application/queries/list-projects/project.view'
-import { DetailProjectQuery } from '../../application/queries/project/project.query'
-import { DetailProjectView } from '../../application/queries/project/project.vew'
 
 @Controller('projects')
 export class PublicProjectController {
@@ -17,30 +19,37 @@ export class PublicProjectController {
   }
 
   @Get()
-  async list(): Promise<ResponseDto<ProjectResponse[]>> {
-    const projects: ProjectView[] = await this._queryBus.execute(
-      new ListProjectsQuery(),
+  async list(
+    @Query() query: ListProjectsRequest,
+  ): Promise<ResponseDto<ProjectView[]>> {
+    const { items, total } = await this._queryBus.execute(
+      new ListProjectsQuery(query.page, query.limit),
     )
 
-    const projectResponses: ProjectResponse[] = projects.map((pro) =>
-      toProjectResponse(pro),
-    )
+    const totalPages = Math.ceil(total / query.limit)
+    const pagination: PaginationMeta = {
+      page: query.page,
+      limit: query.limit,
+      total,
+      totalPages,
+      nextPage: query.page < totalPages ? query.page + 1 : null,
+      prevPage: query.page > 1 ? query.page - 1 : null,
+    }
 
-    return new ResponseDto<ProjectResponse[]>({
+    return new ResponseDto<ProjectView[]>({
       message: 'Get projects successfully',
-      data: projectResponses,
+      data: items,
+      metadata: pagination,
     })
   }
-  
+
   @Get(':id')
   async getDetail(
     @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<ResponseDto<DetailProjectView>> {
-    const project: DetailProjectView = await this._queryBus.execute(
-      new DetailProjectQuery(id),
-    )
-    return new ResponseDto<DetailProjectView>({
-      message: 'Get detail proejct successfully',
+  ): Promise<ResponseDto<ProjectDetailView>> {
+    const project = await this._queryBus.execute(new GetProjectQuery(id))
+    return new ResponseDto<ProjectDetailView>({
+      message: 'Get project detail successfully',
       data: project,
     })
   }

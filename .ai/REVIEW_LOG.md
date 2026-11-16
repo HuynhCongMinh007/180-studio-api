@@ -2,6 +2,48 @@
 
 Newest first. Written automatically on every review request (`directives/agent-workflow.md` §5). Statuses: `Open`, `Fixed`, `Won't fix`.
 
+## 2026-11-08 (re-review) — `findUnique` after the owner's fix
+
+Scope: `prisma-project.repository.ts:62-78`, findings R-20261108-1 to -4.
+
+Verified: code read; `npx prettier --check` on the file (fails, R-5 below). `npx tsc --noEmit` reports `patch-project.handler.ts(19,3): error TS1109` — a different file, outside this scope (the owner's patch work in progress); the repository file itself has no error.
+Not verified: no live request, no tests, query log not inspected.
+
+Result: R-1, R-2 and R-3 are fixed by the single `include` query. R-4 unchanged.
+
+| ID | Severity | Where | Finding | Status |
+|---|---|---|---|---|
+| R-20261108-5 | Minor | `prisma-project.repository.ts:62-78` | Prettier violations (`include:{projectImages:true}`, `if(!row){`, a line with trailing spaces, `...rest}= row`); run `npm run format` | Open |
+
+Updates to the rows below: R-20261108-1, -2 and -3 are `Fixed 2026-11-08`.
+
+## 2026-11-08 — `PrismaProjectRepository.findUnique` (performance and correctness)
+
+Scope: `infrastructure/repositories/prisma-project.repository.ts:62-80`, compared with `prisma/schema.prisma` models `Project` and `ProjectImage`. Earlier Open findings (R-20261102-14 to -16, R-20261020-11 to -13, R-20261017-5, -7, -9) are outside this scope and unchanged.
+
+Verified: files read; schema checked (`ProjectImage.id` is its own surrogate uuid, `projectId` is the foreign key; `Project.projectImages` relation exists).
+Not verified: `tsc`/lint not run, no live request, no tests, query log not inspected.
+
+| ID | Severity | Where | Finding | Status |
+|---|---|---|---|---|
+| R-20261108-1 | Blocking | `prisma-project.repository.ts:66-70` | `projectImage.findMany({ where: { id: projectId } })` filters on the image's own `id`, not `projectId`. It always returns `[]`, so `Project.create()` throws (a project needs at least one image). TypeScript cannot catch it because both fields are strings | Fixed 2026-11-08 |
+| R-20261108-2 | Rule | `prisma-project.repository.ts:63-70` | Two sequential queries (project, then images), and the images query also runs when the project does not exist. Use one query: `findUnique({ where: { id }, include: { projectImages: true } })` | Fixed 2026-11-08 |
+| R-20261108-3 | Minor | `prisma-project.repository.ts:71` | `!projectImages` is always false (`findMany` returns an array, never `null`); dead check that hides R-1 | Fixed 2026-11-08 |
+| R-20261108-4 | Minor | `prisma-project.repository.ts:57` vs. `findUnique` | `deleteProject` throws `ProjectNotFoundError` in infrastructure while `findUnique` returns `null`; once the handler checks `null` first, the `P2025` catch is only a race-condition fallback. Decide one rule and keep it | Open |
+
+
+
+Scope: `presentation/dtos/patch-project.request.dto.ts`, compared with `create-project.request.dto.ts`.
+
+Verified: both DTO files read; `PatchProjectRequest` used only at `admin-project.controller.ts:70`. `@nestjs/mapped-types` is not in `package.json`.
+Not verified: no request sent, `tsc`/lint not run, no tests.
+
+| ID | Severity | Where | Finding | Status |
+|---|---|---|---|---|
+| R-20261102-14 | Blocking | `patch-project.request.dto.ts:48-50` `name`, `:86-94` `projectImages` | Typed optional with `?` but no `@IsOptional()`, so class-validator still requires them: a PATCH without `name` or `projectImages` fails with 400. Add `@IsOptional()` to both | Open |
+| R-20261102-15 | Minor | `patch-project.request.dto.ts:35-45` | `ProjectImageRequest` is declared again, identical to the one in `create-project.request.dto.ts`; import it instead of copying | Open |
+| R-20261102-16 | Minor | `patch-project.request.dto.ts` imports | Relative imports; `create-project.request.dto.ts` uses the `@/modules/...` alias (`directives/code-style.md`) | Open |
+
 ## 2026-10-20 — list controller builds pagination metadata (port returns `{ items, total }`)
 
 Scope: `public-project.controller.ts` (`list`), `list-projects.handler.ts`, `project-query.repository.ts`, `response.dto.ts`.

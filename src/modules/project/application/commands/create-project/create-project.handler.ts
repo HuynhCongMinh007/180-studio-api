@@ -3,10 +3,7 @@ import { CreateProjectCommand } from './create-project.command'
 import { ProjectRepository } from '@/modules/project/domain/repositories/project.repository'
 import { Project } from '@/modules/project/domain/entities/project.entity'
 import { randomUUID } from 'crypto'
-import {
-  ProjectImage,
-  ProjectImageProps,
-} from '@/modules/project/domain/value-objects/project-image.vo'
+import { ProjectImage } from '@/modules/project/domain/value-objects/project-image.vo'
 import { ProjectCreatedEvent } from '../../events/project-created/project-created.event'
 import { TransactionManager } from '@/shared/domain/transactions/transaction-manager'
 
@@ -19,8 +16,8 @@ export class CreateProjectHandler implements ICommandHandler<CreateProjectComman
   ) {}
 
   async execute(command: CreateProjectCommand): Promise<{ projectId: string }> {
-    const projectImages = command.projectImages.map(
-      (image: ProjectImageProps) => ProjectImage.create(image),
+    const projectImages = command.projectImages.map((image) =>
+      ProjectImage.create(image),
     )
     const project: Project = Project.create({
       id: randomUUID(),
@@ -35,8 +32,8 @@ export class CreateProjectHandler implements ICommandHandler<CreateProjectComman
       projectImages: projectImages,
     })
 
-    const result = await this.transactionManager.run(() =>
-      this.projectRepository.createProject(project),
+    const result = await this.transactionManager.run<{ projectId: string }>(
+      () => this.projectRepository.createProject(project),
     )
     this.eventBus.publish(new ProjectCreatedEvent(project.name, project.id))
     return result

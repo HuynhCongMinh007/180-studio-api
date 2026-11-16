@@ -5,6 +5,7 @@ import { Project } from '@/modules/project/domain/entities/project.entity'
 import { getTx } from '@/shared/domain/transactions/transaction-context'
 import { Prisma } from '@/generated/prisma/client'
 import { ProjectNotFoundError } from '@/modules/project/domain/errors/project.errors'
+import { ProjectImage } from '@/modules/project/domain/value-objects/project-image.vo'
 
 @Injectable()
 export class PrismaProjectRepository extends ProjectRepository {
@@ -57,5 +58,45 @@ export class PrismaProjectRepository extends ProjectRepository {
       }
       throw error
     }
+  }
+  async findUnique(projectId: string): Promise<Project | null> {
+    const row = await this.db.project.findUnique({
+      where: { id: projectId },
+      include:{projectImages:true}
+    })
+    if(!row){
+      return null
+    }
+   
+    const {projectImages,...rest}= row
+    const images = projectImages.map((projectImage) =>
+      ProjectImage.create(projectImage),
+    )
+    const inputCreateProjectEntity = { ...rest, projectImages: images }
+    const project = Project.create(inputCreateProjectEntity)
+    return project
+  }
+  async patchProject(project: Project): Promise<Project> {
+    await this.db.projectImage.deleteMany({ where: { projectId: project.id } })
+    await this.db.project.update({
+      where: { id: project.id },
+      data: {
+        name: project.name,
+        year: project.year,
+        location: project.location,
+        siteArea: project.siteArea,
+        floorArea: project.floorArea,
+        client: project.client,
+        photographer: project.photographer,
+        videoUrl: project.videoUrl,
+        projectImages: {
+          create: project.projectImages.map((image) => ({
+            imageUrl: image.imageUrl,
+            coverPriority: image.coverPriority,
+          })),
+        },
+      },
+    })
+    return project
   }
 }

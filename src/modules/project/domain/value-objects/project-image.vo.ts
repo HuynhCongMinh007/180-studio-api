@@ -1,4 +1,4 @@
-import { isHttpsUrl } from '../../../../lib/utils'
+import { isHttpsUrl, isPresent } from '../../../../lib/utils'
 import { InvalidProjectImageError } from '../errors/project-image.errors'
 
 // Limits that mirror the column types in prisma/schema.prisma.
@@ -7,11 +7,11 @@ export const PROJECT_IMAGE_MAX_COVER_PRIORITY = 32767
 
 export interface ProjectImageProps {
   imageUrl: string
-  coverPriority: number | null
+  coverPriority?: number | null
 }
 export class ProjectImage {
   private readonly _imageUrl: string
-  private readonly _coverPriority: number | null
+  private readonly _coverPriority: number | null | undefined
 
   private constructor(props: ProjectImageProps) {
     this._imageUrl = props.imageUrl
@@ -21,7 +21,7 @@ export class ProjectImage {
     return this._imageUrl
   }
 
-  get coverPriority(): number | null {
+  get coverPriority(): number | null | undefined {
     return this._coverPriority
   }
 
@@ -34,7 +34,7 @@ export class ProjectImage {
         `imageUrl must be at most ${PROJECT_IMAGE_URL_MAX_LENGTH} characters`,
       )
     }
-    if (props.coverPriority !== null) {
+    if (isPresent(props.coverPriority)) {
       if (
         !Number.isInteger(props.coverPriority) ||
         props.coverPriority < 0 ||

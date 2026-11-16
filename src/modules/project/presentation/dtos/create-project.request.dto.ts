@@ -41,7 +41,7 @@ export class ProjectImageRequest {
   @IsInt()
   @Min(0)
   @Max(PROJECT_IMAGE_MAX_COVER_PRIORITY)
-  coverPriority?: number
+  coverPriority?: number | null
 }
 
 export class CreateProjectRequest {

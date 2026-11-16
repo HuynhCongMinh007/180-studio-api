@@ -12,7 +12,7 @@ export class CreateProjectCommand extends Command<{ projectId: string }> {
     public readonly videoUrl: string | null | undefined,
     public readonly projectImages: {
       imageUrl: string
-      coverPriority: number | null
+      coverPriority?: number | null
     }[],
   ) {
     super()

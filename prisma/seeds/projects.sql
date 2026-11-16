@@ -14,12 +14,12 @@ INSERT INTO projects (
   client, photographer, video_url, updated_at
 )
 VALUES
-  ('0199a000-0000-7000-8000-000000000001', 'Garden House',      2024, 'District 2, Ho Chi Minh City', 877, 414, 'Private client',        'Photographer A', 'https://www.youtube.com/watch?v=placeholder01', now()),
-  ('0199a000-0000-7000-8000-000000000002', 'Brick Courtyard',   2023, 'Thu Duc, Ho Chi Minh City',    320, 540, 'Family Nguyen',         'Photographer B', 'https://www.youtube.com/watch?v=placeholder02', now()),
-  ('0199a000-0000-7000-8000-000000000003', 'River Cafe',        2022, 'Hoi An, Quang Nam',            150, 210, 'River Cafe Co., Ltd.',  'Photographer C', 'https://www.youtube.com/watch?v=placeholder03', now()),
-  ('0199a000-0000-7000-8000-000000000004', 'Hill Retreat',      2021, 'Da Lat, Lam Dong',            1200, 380, 'Private client',        'Photographer A', 'https://www.youtube.com/watch?v=placeholder04', now()),
-  ('0199a000-0000-7000-8000-000000000005', 'Narrow Townhouse',  2020, 'District 3, Ho Chi Minh City',  60, 245, 'Family Tran',           'Photographer D', 'https://www.youtube.com/watch?v=placeholder05', now()),
-  ('0199a000-0000-7000-8000-000000000006', 'Concrete Studio',   2019, 'Hanoi',                        210, 360, 'Studio Owner',          'Photographer B', 'https://www.youtube.com/watch?v=placeholder06', now())
+  ('0199a000-0000-7000-8000-000000000001', 'Fallingwater', 1939, 'Mill Run, Pennsylvania, USA', NULL, NULL, NULL, 'Wikimedia Commons', NULL, now()),
+  ('0199a000-0000-7000-8000-000000000002', 'Guggenheim Museum Bilbao', 1997, 'Bilbao, Spain', NULL, NULL, NULL, 'Wikimedia Commons', NULL, now()),
+  ('0199a000-0000-7000-8000-000000000003', 'Sydney Opera House', 1973, 'Sydney, Australia', NULL, NULL, NULL, 'Wikimedia Commons', NULL, now()),
+  ('0199a000-0000-7000-8000-000000000004', 'Farnsworth House', 1951, 'Plano, Illinois, USA', NULL, NULL, NULL, 'Wikimedia Commons', NULL, now()),
+  ('0199a000-0000-7000-8000-000000000005', 'Salk Institute', 1965, 'La Jolla, California, USA', NULL, NULL, NULL, 'Wikimedia Commons', NULL, now()),
+  ('0199a000-0000-7000-8000-000000000006', 'Louvre Pyramid', 1989, 'Paris, France', NULL, NULL, NULL, 'Wikimedia Commons', NULL, now())
 ON CONFLICT (id) DO UPDATE SET
   name          = EXCLUDED.name,
   year          = EXCLUDED.year,
@@ -43,37 +43,37 @@ WHERE project_id IN (
 );
 
 -- 4 images per project: 2 covers (priority 0 and 1) and 2 normal images (NULL).
--- Images are real photos from picsum.photos (random subjects, not architecture).
+-- Famous works of great architects; photos from Wikimedia Commons (free licenses, credited in "photographer").
 INSERT INTO project_images (project_id, image_url, cover_priority)
 VALUES
-  ('0199a000-0000-7000-8000-000000000001', 'https://fastly.picsum.photos/id/1000/1920/1080.jpg?hmac=9oFbSamit9P-mTER0QbZy1HIdkMB94bY70uOERfB97A',     0),
-  ('0199a000-0000-7000-8000-000000000001', 'https://fastly.picsum.photos/id/1001/1920/1080.jpg?hmac=U5kL68d5u8hn0ooTTEsdsCB95YPMmQIKcTsjjGXC4sI',     1),
-  ('0199a000-0000-7000-8000-000000000001', 'https://fastly.picsum.photos/id/1002/1920/1080.jpg?hmac=1wSpvZ_v0QK6GFg7Uce0QsUAyRHP0521DjMdvw4Bwsk',     NULL),
-  ('0199a000-0000-7000-8000-000000000001', 'https://fastly.picsum.photos/id/1003/1920/1080.jpg?hmac=CqdHXWUZtPFzlqxMF-wSbDSqGcnPWH_DnEIbidJFOfk',     NULL),
+  ('0199a000-0000-7000-8000-000000000001', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7d/Fallingwater_2007.jpg/1920px-Fallingwater_2007.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 0),
+  ('0199a000-0000-7000-8000-000000000001', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a6/Fallingwater%2C_Mill_Run%2C_PA.jpg/1920px-Fallingwater%2C_Mill_Run%2C_PA.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 1),
+  ('0199a000-0000-7000-8000-000000000001', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/46/Fallingwater_with_Trees.jpg/1920px-Fallingwater_with_Trees.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', NULL),
+  ('0199a000-0000-7000-8000-000000000001', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Fallingwater_interior.JPG/1920px-Fallingwater_interior.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', NULL),
 
-  ('0199a000-0000-7000-8000-000000000002', 'https://fastly.picsum.photos/id/1004/1920/1080.jpg?hmac=bU6kec8gg6XcvAiwA3BVvzY1AqMu9zML0CnbImGc_Oc',  0),
-  ('0199a000-0000-7000-8000-000000000002', 'https://fastly.picsum.photos/id/1005/1920/1080.jpg?hmac=LPBkGn7dUMBdl8NkAswYpezDub8_B75vci383vc2uFo',  1),
-  ('0199a000-0000-7000-8000-000000000002', 'https://fastly.picsum.photos/id/1006/1920/1080.jpg?hmac=RCjXkYahygcb47Abu1Nq_RWCl7Lnv5Hf-NPuR3nAoFk',  NULL),
-  ('0199a000-0000-7000-8000-000000000002', 'https://fastly.picsum.photos/id/1008/1920/1080.jpg?hmac=tbAvmHptEEHrfRKzo11t1AWST7-KubBMWMWVFp7vb0A',  NULL),
+  ('0199a000-0000-7000-8000-000000000002', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Museo_Guggenheim_--_2021_--_Bilbao%2C_Euskadi%2C_Espa%C3%B1a.jpg/1920px-Museo_Guggenheim_--_2021_--_Bilbao%2C_Euskadi%2C_Espa%C3%B1a.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 0),
+  ('0199a000-0000-7000-8000-000000000002', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ed/Guggenheim_Museum_Bilbao_6.jpg/1920px-Guggenheim_Museum_Bilbao_6.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 1),
+  ('0199a000-0000-7000-8000-000000000002', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9e/North_view_of_the_Guggenheim_Museum%2C_Bilbao%2C_Spain_%28PPL3-Altered%29_julesvernex2.jpg/1920px-North_view_of_the_Guggenheim_Museum%2C_Bilbao%2C_Spain_%28PPL3-Altered%29_julesvernex2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', NULL),
+  ('0199a000-0000-7000-8000-000000000002', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/Interior_view_of_Guggenheim_Museum_entrance%2C_Bilbao%2C_Spain_%28PPL1-Corrected%29_julesvernex2.jpg/1920px-Interior_view_of_Guggenheim_Museum_entrance%2C_Bilbao%2C_Spain_%28PPL1-Corrected%29_julesvernex2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', NULL),
 
-  ('0199a000-0000-7000-8000-000000000003', 'https://fastly.picsum.photos/id/1009/1920/1080.jpg?hmac=qWsSSjrIqxrm6KDp_imGIXWv_O4fn-jhBRIyWkuD3eU',       0),
-  ('0199a000-0000-7000-8000-000000000003', 'https://fastly.picsum.photos/id/1010/1920/1080.jpg?hmac=L1eV5lUq9DH-XNJir09kfJzuC2TfpnD5UR_rRf1RM2o',       1),
-  ('0199a000-0000-7000-8000-000000000003', 'https://fastly.picsum.photos/id/1011/1920/1080.jpg?hmac=b2iizlTf2rgEJwS1gra9dXuAbBbP8hb-Ss3WiGSKffE',       NULL),
-  ('0199a000-0000-7000-8000-000000000003', 'https://fastly.picsum.photos/id/1012/1920/1080.jpg?hmac=bSaChET5E355TkTDBhlQXbUc_Emry9XwpxtwjiUobLc',       NULL),
+  ('0199a000-0000-7000-8000-000000000003', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4c/Sydney_%28AU%29%2C_Opera_House_--_2019_--_2980.jpg/1920px-Sydney_%28AU%29%2C_Opera_House_--_2019_--_2980.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 0),
+  ('0199a000-0000-7000-8000-000000000003', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/53/Sydney_Opera_House_and_Harbour_Bridge_Dusk_%282%29_2019-06-21.jpg/1920px-Sydney_Opera_House_and_Harbour_Bridge_Dusk_%282%29_2019-06-21.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 1),
+  ('0199a000-0000-7000-8000-000000000003', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Sydney_%28AU%29%2C_Opera_House_--_2019_--_3054.jpg/1920px-Sydney_%28AU%29%2C_Opera_House_--_2019_--_3054.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', NULL),
+  ('0199a000-0000-7000-8000-000000000003', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/Sydney_%28AU%29%2C_Opera_House_--_2019_--_2994.jpg/1920px-Sydney_%28AU%29%2C_Opera_House_--_2019_--_2994.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', NULL),
 
-  ('0199a000-0000-7000-8000-000000000004', 'https://fastly.picsum.photos/id/1013/1920/1080.jpg?hmac=ZJf9HqrLLv2hOMaQYbxNrcEqzuHEhETtQ_OiQRL4N-U',     0),
-  ('0199a000-0000-7000-8000-000000000004', 'https://fastly.picsum.photos/id/1014/1920/1080.jpg?hmac=11bJWkBY4f7j-TB410j3C5H3-AF6H2r1GnC6XLkUy1g',     1),
-  ('0199a000-0000-7000-8000-000000000004', 'https://fastly.picsum.photos/id/1015/1920/1080.jpg?hmac=M12OSFAxxiMvlGq9OtLXHs02DhW37fZ72Ui-DHvRI28',     NULL),
-  ('0199a000-0000-7000-8000-000000000004', 'https://fastly.picsum.photos/id/1016/1920/1080.jpg?hmac=m0K7ktzZcsjv1VlObagIDqq68-BWPa5PeAxe--_uFVc',     NULL),
+  ('0199a000-0000-7000-8000-000000000004', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a6/Farnsworth_House_Exterior_2.jpg/1920px-Farnsworth_House_Exterior_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 0),
+  ('0199a000-0000-7000-8000-000000000004', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/Farnsworth_House_Exterior_1.jpg/1920px-Farnsworth_House_Exterior_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 1),
+  ('0199a000-0000-7000-8000-000000000004', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Farnsworth_House_by_Mies_Van_Der_Rohe_-_exterior-8.jpg/1920px-Farnsworth_House_by_Mies_Van_Der_Rohe_-_exterior-8.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', NULL),
+  ('0199a000-0000-7000-8000-000000000004', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/Farnsworth_House_Interior.jpg/1920px-Farnsworth_House_Interior.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', NULL),
 
-  ('0199a000-0000-7000-8000-000000000005', 'https://fastly.picsum.photos/id/1018/1920/1080.jpg?hmac=Z-0vPrMvqfkGFzkq3vnamIQKXBk0KSXVxNIKXKCtW4I', 0),
-  ('0199a000-0000-7000-8000-000000000005', 'https://fastly.picsum.photos/id/1019/1920/1080.jpg?hmac=XGm3xPMZTa3H-YXR0qxs91ClJOdn43Ei0xRbGTpq6wA', 1),
-  ('0199a000-0000-7000-8000-000000000005', 'https://fastly.picsum.photos/id/1020/1920/1080.jpg?hmac=FyYJrCxFkLNz7QcNN-41OdX1IKyfqZVdQ9MRWcSamiA', NULL),
-  ('0199a000-0000-7000-8000-000000000005', 'https://fastly.picsum.photos/id/1021/1920/1080.jpg?hmac=DS2TfmvLwtjDGFoSGOPJw6PprUlsIUz-0huiqVL3N_Y', NULL),
+  ('0199a000-0000-7000-8000-000000000005', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ef/Salk_institute_2014.jpg/1920px-Salk_institute_2014.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 0),
+  ('0199a000-0000-7000-8000-000000000005', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/Salk_Institute_Highsmith.jpg/1920px-Salk_Institute_Highsmith.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 1),
+  ('0199a000-0000-7000-8000-000000000005', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4c/Salk_Institute_for_Biological_Studies_and_a_seagull_dllu.jpg/1920px-Salk_Institute_for_Biological_Studies_and_a_seagull_dllu.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', NULL),
+  ('0199a000-0000-7000-8000-000000000005', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4f/Chairs_and_table_at_Salk_Institute_dllu.jpg/1920px-Chairs_and_table_at_Salk_Institute_dllu.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', NULL),
 
-  ('0199a000-0000-7000-8000-000000000006', 'https://fastly.picsum.photos/id/1022/1920/1080.jpg?hmac=n9yI3ctkMPGkQ_VnUtxQVQNXrzZbZIs__BFZP1h_BAY',  0),
-  ('0199a000-0000-7000-8000-000000000006', 'https://fastly.picsum.photos/id/1023/1920/1080.jpg?hmac=rlsKP6YbqSnw8h-HfW2RCyu3MKkG90hNhLsOsEuGXj8',  1),
-  ('0199a000-0000-7000-8000-000000000006', 'https://fastly.picsum.photos/id/1024/1920/1080.jpg?hmac=H-vGBUbqh6o_80Mk2uEuKSiCsNKnnKxZDBCQTqckBCU',  NULL),
-  ('0199a000-0000-7000-8000-000000000006', 'https://fastly.picsum.photos/id/1025/1920/1080.jpg?hmac=cx-5UC_HcExBANyHFTlwG9-5Drw4emdHvXY2sLThpYM',  NULL);
+  ('0199a000-0000-7000-8000-000000000006', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/Louvre_Museum_Wikimedia_Commons.jpg/1920px-Louvre_Museum_Wikimedia_Commons.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 0),
+  ('0199a000-0000-7000-8000-000000000006', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/The_Louvre%2C_Paris_%2817536557176%29.jpg/1920px-The_Louvre%2C_Paris_%2817536557176%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 1),
+  ('0199a000-0000-7000-8000-000000000006', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/View_of_the_Louvre_Palace_from_inside_of_the_Louvre_Pyramid_%2831398171506%29.jpg/1920px-View_of_the_Louvre_Palace_from_inside_of_the_Louvre_Pyramid_%2831398171506%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', NULL),
+  ('0199a000-0000-7000-8000-000000000006', 'https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/Louvre_%28Ank_kumar_Infosys%29_05.jpg/1920px-Louvre_%28Ank_kumar_Infosys%29_05.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', NULL);
 
 COMMIT;

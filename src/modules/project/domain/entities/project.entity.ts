@@ -24,6 +24,17 @@ export interface ProjectProps {
   videoUrl: string | null | undefined
   projectImages: ProjectImage[]
 }
+export interface ProjectChanges {
+  name?: string
+  year?: number | null
+  location?: string | null
+  siteArea?: number | null
+  floorArea?: number | null
+  client?: string | null
+  photographer?: string | null
+  videoUrl?: string | null
+  projectImages?: ProjectImage[]
+}
 
 export class Project {
   private readonly _id: string
@@ -88,6 +99,20 @@ export class Project {
 
   get projectImages(): ProjectImage[] {
     return this._projectImages
+  }
+  private toProps(): ProjectProps {
+    return {
+      id: this._id,
+      name: this._name,
+      year: this._year,
+      location: this._location,
+      siteArea: this._siteArea,
+      floorArea: this._floorArea,
+      client: this._client,
+      photographer: this._photographer,
+      videoUrl: this._videoUrl,
+      projectImages: this._projectImages,
+    }
   }
 
   static create(props: ProjectProps): Project {
@@ -198,5 +223,12 @@ export class Project {
     }
 
     return new Project(props)
+  }
+  patch(changes: ProjectChanges): Project {
+    const entries = Object.entries(changes).filter(
+      ([, value]) => value !== undefined,
+    )
+    const defined = Object.fromEntries(entries) as ProjectChanges
+    return Project.create({ ...this.toProps(), ...defined })
   }
 }

@@ -5,4 +5,6 @@ export abstract class ProjectRepository {
   abstract deleteProject(
     projectId: string,
   ): Promise<{ projectId: string; name: string }>
+  abstract findUnique(id:string):Promise<Project|null>
+  abstract patchProject(project: Project): Promise<Project>
 }

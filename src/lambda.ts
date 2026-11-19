@@ -1,17 +1,22 @@
 import serverlessExpress from '@codegenie/serverless-express'
-import type { Handler } from 'aws-lambda'
+import type { Context } from 'aws-lambda'
 import { createApp } from './create-app'
 
-// Reuse the Nest app across warm invocations
-let server: Handler | undefined
+// Lambda (Node 24+) rejects callback-style handlers, so only (event, context) is used
+type AsyncHandler = (event: unknown, context: Context) => Promise<unknown>
 
-async function bootstrap(): Promise<Handler> {
+// Reuse the Nest app across warm invocations
+let server: AsyncHandler | undefined
+
+async function bootstrap(): Promise<AsyncHandler> {
   const app = await createApp()
   await app.init()
-  return serverlessExpress({ app: app.getHttpAdapter().getInstance() })
+  return serverlessExpress({
+    app: app.getHttpAdapter().getInstance(),
+  }) as unknown as AsyncHandler
 }
 
-export const handler: Handler = async (event, context, callback) => {
+export async function handler(event: unknown, context: Context) {
   server ??= await bootstrap()
-  return server(event, context, callback)
+  return server(event, context)
 }

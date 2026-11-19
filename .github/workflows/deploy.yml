@@ -17,7 +17,13 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
       - run: npm prune --omit=dev
-      - run: zip -r function.zip . -x ".git/*" ".github/*"
+      # @prisma/client kéo theo prisma CLI (+ typescript, studio...) qua peerDependencies -> ~370MB.
+      # Runtime chỉ cần @prisma/client/runtime + wasm postgresql, nên xoá phần còn lại.
+      - run: |
+          rm -rf node_modules/.bin node_modules/prisma node_modules/typescript node_modules/effect \
+            node_modules/@electric-sql node_modules/@prisma/{studio-core,dev,engines,fetch-engine,streams-local}
+          find node_modules/@prisma/client/runtime -name '*.wasm*' ! -name '*fast_bg.postgresql*' -delete
+      - run: zip -qr function.zip dist node_modules package.json && ls -lh function.zip
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:

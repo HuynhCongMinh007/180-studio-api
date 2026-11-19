@@ -1,23 +1,9 @@
 import 'dotenv/config'
-import { Logger, ValidationPipe } from '@nestjs/common'
-import { NestFactory } from '@nestjs/core'
-import { AppModule } from './app.module'
-import { GlobalExceptionFilter } from './shared/presentation/filters/global-exception.filter'
-
-const API_PREFIX = 'api'
+import { Logger } from '@nestjs/common'
+import { API_PREFIX, createApp } from './create-app'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    routeConflictPolicy: { duplicate: 'error', shadow: 'error' },
-  })
-  app.setGlobalPrefix(API_PREFIX)
-  app.useGlobalFilters(new GlobalExceptionFilter())
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-    }),
-  )
+  const app = await createApp()
 
   const port = process.env.PORT ?? 5000
   await app.listen(port)

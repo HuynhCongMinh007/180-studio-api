@@ -5,6 +5,7 @@ export abstract class ProjectQueryRepository {
   abstract findAll(
     page: number,
     limit: number,
+    offset?: number,
   ): Promise<{ items: ProjectSummary[]; total: number }>
   abstract findOne(id: string): Promise<ProjectDetail | null>
 }

@@ -1,15 +1,22 @@
 BEGIN;
 
--- Images are real photos from Unsplash (architecture and interior).
+-- Images are the famous works seeded in projects.sql (photos from Wikimedia Commons, free licenses).
 INSERT INTO home_slides (id, image_url, position, updated_at)
 VALUES
-  (1, 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80&auto=format&fit=crop', 0, now()),
-  (2, 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1920&q=80&auto=format&fit=crop', 1, now()),
-  (3, 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1920&q=80&auto=format&fit=crop', 2, now()),
-  (4, 'https://images.unsplash.com/photo-1600047509358-9dc75507daeb?w=1920&q=80&auto=format&fit=crop', 3, now()),
-  (5, 'https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1920&q=80&auto=format&fit=crop', 4, now()),
-  (6, 'https://images.unsplash.com/photo-1615873968403-89e068629265?w=1920&q=80&auto=format&fit=crop', 5, now()),
-  (7, 'https://images.unsplash.com/photo-1600121848594-d8644e57abab?w=1920&q=80&auto=format&fit=crop', 6, now())
+  -- Fallingwater
+  (1, 'https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7d/Fallingwater_2007.jpg/1920px-Fallingwater_2007.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 0, now()),
+  -- Guggenheim Museum Bilbao
+  (2, 'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Museo_Guggenheim_--_2021_--_Bilbao%2C_Euskadi%2C_Espa%C3%B1a.jpg/1920px-Museo_Guggenheim_--_2021_--_Bilbao%2C_Euskadi%2C_Espa%C3%B1a.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 1, now()),
+  -- Sydney Opera House
+  (3, 'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4c/Sydney_%28AU%29%2C_Opera_House_--_2019_--_2980.jpg/1920px-Sydney_%28AU%29%2C_Opera_House_--_2019_--_2980.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 2, now()),
+  -- Farnsworth House
+  (4, 'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a6/Farnsworth_House_Exterior_2.jpg/1920px-Farnsworth_House_Exterior_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 3, now()),
+  -- Salk Institute
+  (5, 'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ef/Salk_institute_2014.jpg/1920px-Salk_institute_2014.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 4, now()),
+  -- Louvre Pyramid
+  (6, 'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/Louvre_Museum_Wikimedia_Commons.jpg/1920px-Louvre_Museum_Wikimedia_Commons.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 5, now()),
+  -- Sydney Opera House at dusk
+  (7, 'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/53/Sydney_Opera_House_and_Harbour_Bridge_Dusk_%282%29_2019-06-21.jpg/1920px-Sydney_Opera_House_and_Harbour_Bridge_Dusk_%282%29_2019-06-21.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', 6, now())
 ON CONFLICT (id) DO UPDATE SET
   image_url  = EXCLUDED.image_url,
   position   = EXCLUDED.position,

@@ -14,4 +14,10 @@ export class ListProjectsRequest {
   @Min(1)
   @Max(100)
   limit: number = 10
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  offset?: number
 }

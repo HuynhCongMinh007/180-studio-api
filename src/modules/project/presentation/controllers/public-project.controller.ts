@@ -23,7 +23,7 @@ export class PublicProjectController {
     @Query() query: ListProjectsRequest,
   ): Promise<ResponseDto<ProjectView[]>> {
     const { items, total } = await this._queryBus.execute(
-      new ListProjectsQuery(query.page, query.limit),
+      new ListProjectsQuery(query.page, query.limit, query.offset),
     )
 
     const totalPages = Math.ceil(total / query.limit)

@@ -15,6 +15,7 @@ export class ListProjectsHandler implements IQueryHandler<ListProjectsQuery> {
     const { items, total } = await this._projectQueryRepository.findAll(
       query.page,
       query.limit,
+      query.offset,
     )
     return { items: items.map(toProjectView), total }
   }

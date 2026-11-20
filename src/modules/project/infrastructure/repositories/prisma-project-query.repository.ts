@@ -16,6 +16,7 @@ export class PrismaProjectQueryRepository extends ProjectQueryRepository {
   async findAll(
     page: number,
     limit: number,
+    offset?: number,
   ): Promise<{ items: ProjectSummary[]; total: number }> {
     const getAll = async () =>
       await this._prisma.project.findMany({
@@ -28,7 +29,7 @@ export class PrismaProjectQueryRepository extends ProjectQueryRepository {
             take: 1,
           },
         },
-        skip: (page - 1) * limit,
+        skip: offset ?? (page - 1) * limit,
         take: limit,
         orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
       })

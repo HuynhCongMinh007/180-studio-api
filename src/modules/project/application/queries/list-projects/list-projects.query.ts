@@ -5,6 +5,7 @@ export class ListProjectsQuery extends Query<ListProjectsView> {
   constructor(
     public readonly page: number,
     public readonly limit: number,
+    public readonly offset?: number,
   ) {
     super()
   }
